@@ -3,16 +3,22 @@ import { AppModule } from './app.module';
 import { appConfig } from './config/app.config';
 import { setupSwagger } from './config/swagger.config';
 import * as dotenv from 'dotenv';
+import { HttpErrorFilter } from './core/filter/httpError.filter';
+import { TransformResponseInterceptor } from './interceptors/transform-response.interceptor';
 // config env;
 dotenv.config();
 
-console.log(process.env.DB_HOST, '<<< DB_HOST');
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	if (appConfig.cors) {
 		app.enableCors();
 	}
 
+	// setting filter http request
+	app.useGlobalFilters(new HttpErrorFilter());
+
+	// interceptor (success response)
+	app.useGlobalInterceptors(new TransformResponseInterceptor());
 	// swapper
 	setupSwagger(app);
 	// run src

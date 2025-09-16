@@ -3,5 +3,5 @@
 	"trailingComma": "all",
 	"endOfLine": "lf",
 	"useTabs": true,
-	"tabWidth": 1
+	"tabWidth": 2
 }
