@@ -19,11 +19,12 @@ async function bootstrap() {
 
 	// interceptor (success response)
 	app.useGlobalInterceptors(new TransformResponseInterceptor());
+	app.setGlobalPrefix('api');
 	// swapper
 	setupSwagger(app);
 	// run src
 	await app.listen(appConfig.port, () => {
-		console.log(`🚀 TheCFH running at: http://localhost:${appConfig.port}`);
+		console.log(`🚀 TheCFH running at: http://localhost:${appConfig.port}/api`);
 		console.log(
 			`📖 Swagger docs available at: http://localhost:${appConfig.port}/docs`,
 		);
