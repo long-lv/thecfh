@@ -1,25 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
-
+import { v4 as uuid } from 'uuid';
 @Injectable()
 export class CategoriesService {
-	private listCategory: Category[] = [
+	private listCategory: Partial<Category>[] = [
 		{
 			id: '1',
 			name: 'furniture',
-			desc: 'furniture Data',
+			description: 'furniture Data',
 		},
 		{
 			id: 'electric',
 			name: 'electric',
-			desc: 'electric Data',
+			description: 'electric Data',
 		},
 	];
 
 	create(createCategoryDto: CreateCategoryDto) {
-		return 'This action adds a new category';
+		const newCategory: Partial<Category> = {
+			id: uuid(),
+			name: createCategoryDto.name,
+			description: createCategoryDto.description,
+		};
+		this.listCategory.push(newCategory);
+		return {
+			message: 'Create category success!',
+			data: newCategory,
+		};
 	}
 
 	findAll() {
@@ -27,6 +36,13 @@ export class CategoriesService {
 	}
 
 	findOne(id: string) {
+		const findId = this.listCategory.find((category) => category.id === id);
+		if (!findId) {
+			throw new NotFoundException({
+				message: `Can't get category by ${id}`,
+				error: 'Not found',
+			});
+		}
 		return this.listCategory.find((category) => category.id === id);
 	}
 
