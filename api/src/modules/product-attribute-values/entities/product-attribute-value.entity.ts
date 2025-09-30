@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/core/database/base.entity';
-import { ProductAttribute } from 'src/product-attributes/entities/product-attribute.entity';
+import { ProductAttribute } from 'src/modules/product-attributes/entities/product-attribute.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('productAttributeValues')
