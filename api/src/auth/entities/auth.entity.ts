@@ -1,10 +1,8 @@
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { Role } from '../type/user.type';
-@Entity()
-export class Auth {
-	@PrimaryGeneratedColumn()
-	id: number;
-
+import { BaseEntity } from 'src/core/database/base.entity';
+@Entity('users')
+export class Auth extends BaseEntity {
 	@Column({ unique: true })
 	email: string;
 

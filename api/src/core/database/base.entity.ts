@@ -8,12 +8,12 @@ export abstract class BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: string;
 
-	@CreateDateColumn({ type: 'timestamptz' })
+	@CreateDateColumn({ type: 'timestamp' })
 	createdAt: Date;
 
-	@UpdateDateColumn({ type: 'timestamptz' })
+	@UpdateDateColumn({ type: 'timestamp' })
 	updatedAt: Date;
 
-	@DeleteDateColumn({ type: 'timestamptz' })
+	@DeleteDateColumn({ type: 'timestamp' })
 	deleteAt?: Date | null;
 }
