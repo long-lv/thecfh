@@ -1,6 +1,7 @@
 import { Category } from 'src/categories/entities/category.entity';
 import { BaseEntity } from 'src/core/database/base.entity';
 import { ProductAttribute } from 'src/product-attributes/entities/product-attribute.entity';
+import { ProductVariant } from 'src/product-variants/entities/product-variant.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('products')
@@ -28,4 +29,7 @@ export class Product extends BaseEntity {
 
 	@OneToMany(() => ProductAttribute, (productAttr) => productAttr.productId)
 	productAttrs: ProductAttribute[];
+
+	@OneToMany(() => ProductVariant, (productVariant) => productVariant.productId)
+	productVariants: ProductVariant[];
 }
