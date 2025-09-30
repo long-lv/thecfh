@@ -9,6 +9,10 @@ import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { PaginatedResponse } from 'src/common/types/paginationResponse.type';
 import { SuccessResponse } from 'src/common/types/successResponse.type';
+type ResponseWithMessage<T> = {
+	message: string;
+	data: T;
+};
 
 @Injectable()
 export class TransformResponseInterceptor<T>
@@ -39,6 +43,16 @@ export class TransformResponseInterceptor<T>
 				if (isPaginated) {
 					const { data, meta } = responseData;
 					return { ...baseResponse, data, meta };
+				}
+
+				if (
+					responseData &&
+					typeof responseData === 'object' &&
+					'message' in responseData &&
+					'data' in responseData
+				) {
+					const { message, data } = responseData as ResponseWithMessage<T>;
+					return { ...baseResponse, message, data };
 				}
 
 				return { ...baseResponse, data: responseData };

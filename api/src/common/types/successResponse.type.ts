@@ -7,4 +7,5 @@ export interface SuccessResponse<T> {
 	path: string;
 	data: T | T[];
 	meta?: PaginationMeta;
+	message?: string;
 }
