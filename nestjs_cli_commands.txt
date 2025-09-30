@@ -1,0 +1,41 @@
+NestJS CLI Commands Reference
+==============================
+
+# Tạo Module
+nest g module users
+
+# Tạo Controller
+nest g controller users
+
+# Tạo Service
+nest g service users
+
+# Tạo Resource (Controller + Service + DTO + Test)
+nest g resource products
+
+# Tạo Gateway (WebSocket)
+nest g gateway chat
+
+# Tạo Guard (bảo vệ route)
+nest g guard auth
+
+# Tạo Interceptor
+nest g interceptor logging
+
+# Tạo Pipe (validate/transform dữ liệu)
+nest g pipe validation
+
+# Tạo Filter (xử lý exception riêng)
+nest g filter http-exception
+
+# Tạo Middleware
+nest g middleware logger
+
+# Tạo Decorator custom
+nest g decorator user
+
+# Tạo DTO (Data Transfer Object)
+nest g class users/dto/create-user.dto --flat
+
+# Tạo Entity (TypeORM/Prisma)
+nest g class users/entities/user.entity --flat
