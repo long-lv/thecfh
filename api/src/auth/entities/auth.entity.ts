@@ -23,26 +23,26 @@ export class Auth extends BaseEntity {
 	role: Role;
 
 	@OneToMany(() => Cart, (cart) => cart.user)
-	carts: Cart[] = [];
+	carts: Cart[];
 	
 	@OneToMany(() => Oder, (oder) => oder.user)
-	oders: Oder[] = [];
+	oders: Oder[];
 
-	@OneToMany(() => Post, (post) => post.authorId)
-	posts: Post[] = [];
+	@OneToMany(() => Post, (post) => post.author)
+	posts: Post[];
 
-	@OneToMany(() => Comment, (comment) => comment.userId)
-	comments: Comment[] = [];
+	@OneToMany(() => Comment, (comment) => comment.user)
+	comments: Comment[];
 
-	@OneToMany(() => Inquiry, (inquiry) => inquiry.senderId)
-	senderInquiries: Inquiry[] = [];
+	@OneToMany(() => Inquiry, (inquiry) => inquiry.sender)
+	senderInquiries: Inquiry[];
 
-	@OneToMany(() => Inquiry, (inquiry) => inquiry.receiverId)
-	receiverInquiries: Inquiry[] = [];
+	@OneToMany(() => Inquiry, (inquiry) => inquiry.receiver)
+	receiverInquiries: Inquiry[];
 	
 	@OneToMany(() => Chat, (chat) => chat.senderId)
-	senderChats: Chat[] = [];
+	senderChats: Chat[];
 
 	@OneToMany(() => Chat, (chat) => chat.receiverId)
-	receiverChats: Chat[] = [];
+	receiverChats: Chat[];
 }
