@@ -1,7 +1,0 @@
-export enum Status_oder {
-	CONFIRM = 'CONFIRM',
-	PENDING = 'PENDING',
-	SHIPPING = 'SHIPPING',
-	COMPLETED = 'COMPLETED',
-	CANCEL = 'CANCELLED',
-}
