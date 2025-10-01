@@ -3,9 +3,10 @@ import {
 	Get,
 	Post,
 	Body,
-	Patch,
 	Param,
 	Delete,
+	Query,
+	Put,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -16,21 +17,28 @@ import {
 	ApiParam,
 	ApiResponse,
 } from '@nestjs/swagger';
-import { CategoryDto } from './dto/list-category.dto';
+import { CategoryDto } from './dto/category.dto';
+import { Category } from './entities/category.entity';
+import { CategoryListQueryDto } from './dto/category-list-query.dto';
 
 @Controller('categories')
 export class CategoriesController {
 	constructor(private readonly categoriesService: CategoriesService) {}
-
 	@Post()
+	@ApiOperation({ summary: 'Create a category' })
+	@ApiResponse({
+		status: 200,
+		description: 'Create category success!',
+		type: Category,
+	})
 	create(@Body() createCategoryDto: CreateCategoryDto) {
 		return this.categoriesService.create(createCategoryDto);
 	}
 
-	@Get()
-	@ApiOperation({ summary: 'Lấy danh sách categories' })
+	@Get('list')
+	@ApiOperation({ summary: 'Get list categories' })
 	@ApiOkResponse({
-		description: 'Danh sách categories',
+		description: 'Get list categories',
 		type: CategoryDto,
 		isArray: true,
 		example: [
@@ -42,22 +50,29 @@ export class CategoriesController {
 			},
 			{
 				id: 2,
+
 				name: 'Electronics',
 				desc: 'Electronics Data',
 				createdAt: '2025-09-29T12:35:12.789Z',
 			},
 		],
 	})
-	findAll() {
-		return this.categoriesService.findAll();
+	findAll(@Query() query: CategoryListQueryDto) {
+		const { keyword, order, page, size } = query;
+		return this.categoriesService.findAll({
+			keyword,
+			order,
+			page,
+			limit: size,
+		});
 	}
 
 	@Get(':id')
-	@ApiOperation({ summary: 'Lấy chi tiết category theo id' })
-	@ApiParam({ name: 'id', type: Number, description: 'ID của category' })
+	@ApiOperation({ summary: 'find category by id' })
+	@ApiParam({ name: 'id', type: String, description: 'id by category' })
 	@ApiResponse({
 		status: 200,
-		description: 'Chi tiết category',
+		description: 'find category by successfully',
 		type: CategoryDto,
 	})
 	@Get(':id')
@@ -65,16 +80,27 @@ export class CategoriesController {
 		return this.categoriesService.findOne(id);
 	}
 
-	@Patch(':id')
-	update(
-		@Param('id') id: string,
-		@Body() updateCategoryDto: UpdateCategoryDto,
-	) {
-		return this.categoriesService.update(+id, updateCategoryDto);
+	@Put(':id')
+	@ApiOperation({ summary: 'update category by id' })
+	@ApiParam({ name: 'id', type: String, description: 'id by category' })
+	@ApiResponse({
+		status: 200,
+		description: 'updated category sueccessfully',
+		type: Category,
+	})
+	update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+		return this.categoriesService.update(id, updateCategoryDto);
 	}
 
+	@ApiOperation({ summary: 'delete category by id' })
+	@ApiParam({ name: 'id', type: String, description: 'Id by category' })
+	@ApiResponse({
+		status: 200,
+		description: 'delete category by id succsessfully',
+		type: CategoryDto,
+	})
 	@Delete(':id')
 	remove(@Param('id') id: string) {
-		return this.categoriesService.remove(+id);
+		return this.categoriesService.remove(id);
 	}
 }
