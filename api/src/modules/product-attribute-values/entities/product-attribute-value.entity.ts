@@ -1,6 +1,7 @@
 import { BaseEntity } from 'src/core/database/base.entity';
 import { ProductAttribute } from 'src/modules/product-attributes/entities/product-attribute.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { ProductVariantsValue } from 'src/modules/product-variants-value/entities/product-variants-value.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('productAttributeValues')
 export class ProductAttributeValue extends BaseEntity {
@@ -19,4 +20,10 @@ export class ProductAttributeValue extends BaseEntity {
 	)
 	@JoinColumn({ name: 'attributeId' })
 	productAttr: ProductAttribute;
+
+	@OneToMany(
+		() => ProductVariantsValue,
+		(productVariantsVal) => productVariantsVal.productAttrValue,
+	)
+	variantValues: ProductVariantsValue[];
 }

@@ -8,9 +8,9 @@ User → Post : User@OneToMany, Post@ManyToOne
 
 User → Comment : User@OneToMany, Comment@ManyToOne
 
-User → Email (sender) : User@OneToMany, Email@ManyToOne
+User → Inquyry (sender) : User@OneToMany, Inquyry@ManyToOne
 
-User → Email (receiver) : User@OneToMany, Email@ManyToOne
+User → Inquyry (receiver) : User@OneToMany, Inquyry@ManyToOne
 
 User → Chat (sender) : User@OneToMany, Chat@ManyToOne
 
@@ -98,11 +98,11 @@ Comment → Comment (self-relation) : Comment@ManyToOne (parent), Comment@OneToM
 
 Không có quan hệ trực tiếp
 
-🔹 Emails
+🔹 Inquyries
 
-Email → User (sender) : Email@ManyToOne, User@OneToMany
+Inquyry → User (sender) : Inquyry@ManyToOne, User@OneToMany
 
-Email → User (receiver) : Email@ManyToOne, User@OneToMany
+Inquyry → User (receiver) : Inquyry@ManyToOne, User@OneToMany
 
 🔹 Chats
 

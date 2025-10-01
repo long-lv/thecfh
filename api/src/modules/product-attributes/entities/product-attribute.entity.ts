@@ -17,6 +17,9 @@ export class ProductAttribute extends BaseEntity {
 	@JoinColumn({ name: 'productId' })
 	product: Product;
 
+	@ManyToOne(() => Product, (product) => product.productAttrs)
+	productAttrs: Product;
+
 	@OneToMany(
 		() => ProductAttributeValue,
 		(productAttrValue) => productAttrValue.attributeId,
