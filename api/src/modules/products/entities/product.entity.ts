@@ -1,7 +1,7 @@
-import { Category } from 'src/categories/entities/category.entity';
 import { BaseEntity } from 'src/core/database/base.entity';
-import { ProductAttribute } from 'src/product-attributes/entities/product-attribute.entity';
-import { ProductVariant } from 'src/product-variants/entities/product-variant.entity';
+import { Category } from 'src/modules/categories/entities/category.entity';
+import { ProductAttribute } from 'src/modules/product-attributes/entities/product-attribute.entity';
+import { ProductVariant } from 'src/modules/product-variants/entities/product-variant.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('products')

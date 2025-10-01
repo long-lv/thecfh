@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/core/database/base.entity';
-import { ProductAttribute } from 'src/product-attributes/entities/product-attribute.entity';
-import { ProductVariantsValue } from 'src/product-variants-value/entities/product-variants-value.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { ProductAttribute } from 'src/modules/product-attributes/entities/product-attribute.entity';
+import { ProductVariantsValue } from 'src/modules/product-variants-value/entities/product-variants-value.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('productAttributeValues')
 export class ProductAttributeValue extends BaseEntity {
