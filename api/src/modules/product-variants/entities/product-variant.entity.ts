@@ -1,8 +1,9 @@
-import { CartItem } from 'src/cart-items/entities/cart-item.entity';
+
 import { BaseEntity } from 'src/core/database/base.entity';
-import { OderItem } from 'src/oder-items/entities/oder-item.entity';
-import { ProductVariantsValue } from 'src/product-variants-value/entities/product-variants-value.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { CartItem } from 'src/modules/cart-items/entities/cart-item.entity';
+import { OderItem } from 'src/modules/oder-items/entities/oder-item.entity';
+import { ProductVariantsValue } from 'src/modules/product-variants-value/entities/product-variants-value.entity';
+import { Product } from 'src/modules/products/entities/product.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 @Entity('productVariants')
 export class ProductVariant extends BaseEntity {

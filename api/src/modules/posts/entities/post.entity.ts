@@ -1,6 +1,6 @@
-import { Auth } from 'src/auth/entities/auth.entity';
-import { Comment } from 'src/comments/entities/comment.entity';
 import { BaseEntity } from 'src/core/database/base.entity';
+import { Auth } from 'src/modules/auth/entities/auth.entity';
+import { Comment } from 'src/modules/comments/entities/comment.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('posts')

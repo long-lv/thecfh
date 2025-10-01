@@ -1,9 +1,9 @@
 import { BaseEntity } from 'src/core/database/base.entity';
+import { Auth } from 'src/modules/auth/entities/auth.entity';
+import { OderItem } from 'src/modules/oder-items/entities/oder-item.entity';
+import { ProductVariant } from 'src/modules/product-variants/entities/product-variant.entity';
+import { Status_oder } from 'src/oders/type/oder.type';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Status_oder } from '../type/oder.type';
-import { Auth } from 'src/auth/entities/auth.entity';
-import { OderItem } from 'src/oder-items/entities/oder-item.entity';
-import { ProductVariant } from 'src/product-variants/entities/product-variant.entity';
 
 @Entity('oders')
 export class Oder extends BaseEntity {

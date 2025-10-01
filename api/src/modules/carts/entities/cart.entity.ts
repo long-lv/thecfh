@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { StatusCart } from '../type/cart.type';
-import { Auth } from 'src/auth/entities/auth.entity';
-import { CartItem } from 'src/cart-items/entities/cart-item.entity';
 import { BaseEntity } from 'src/core/database/base.entity';
+import { Auth } from 'src/modules/auth/entities/auth.entity';
+import { CartItem } from 'src/modules/cart-items/entities/cart-item.entity';
+import { StatusCart } from 'src/carts/type/cart.type';
 @Entity('Carts')
 export class Cart extends BaseEntity {
 	@Column({

@@ -1,6 +1,7 @@
-import { Cart } from 'src/carts/entities/cart.entity';
+
 import { BaseEntity } from 'src/core/database/base.entity';
-import { ProductVariant } from 'src/product-variants/entities/product-variant.entity';
+import { Cart } from 'src/modules/carts/entities/cart.entity';
+import { ProductVariant } from 'src/modules/product-variants/entities/product-variant.entity';
 import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 @Entity('cartItems')
 export class CartItem extends BaseEntity {
