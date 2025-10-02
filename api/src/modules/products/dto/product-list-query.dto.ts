@@ -7,4 +7,7 @@ export class ProductListQueryDto extends PaginationQueryDto {
 
     @IsOptional()
     order: string;
+
+    @IsOptional()
+    categoryId: string;
 }

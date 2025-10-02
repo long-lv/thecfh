@@ -73,6 +73,10 @@ export class ProductsService {
 		const queryBuilder = this.productRepository.createQueryBuilder('product')
 		.leftJoin('product.category', 'category')
 
+		if (query.categoryId) {
+			queryBuilder.where('product.categoryId = :categoryId', { categoryId: query.categoryId})
+		}
+
 		if (keyword) {
 			const escapedKeyword = keyword.trim().replace(/[%_]/g, '\\$&');
 			queryBuilder.where(
