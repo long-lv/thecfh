@@ -1,30 +1,30 @@
 import {
-	Controller,
-	Get,
-	Post,
 	Body,
-	Param,
+	Controller,
 	Delete,
-	Query,
+	Get,
+	Param,
+	Post,
 	Put,
+	Query,
 } from '@nestjs/common';
-import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
 	ApiResponse,
 } from '@nestjs/swagger';
-import { CategoryDto } from './dto/category.dto';
-import { Category } from './entities/category.entity';
+import { CategoriesService } from './categories.service';
 import { CategoryListQueryDto } from './dto/category-list-query.dto';
+import { CategoryDto } from './dto/category.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Category } from './entities/category.entity';
 
 @Controller('categories')
 export class CategoriesController {
 	constructor(private readonly categoriesService: CategoriesService) {}
-	@Post()
+	@Post('create')
 	@ApiOperation({ summary: 'Create a category' })
 	@ApiResponse({
 		status: 200,
@@ -80,7 +80,7 @@ export class CategoriesController {
 		return this.categoriesService.findOne(id);
 	}
 
-	@Put(':id')
+	@Put('update/:id')
 	@ApiOperation({ summary: 'update category by id' })
 	@ApiParam({ name: 'id', type: String, description: 'id by category' })
 	@ApiResponse({
@@ -95,11 +95,10 @@ export class CategoriesController {
 	@ApiOperation({ summary: 'delete category by id' })
 	@ApiParam({ name: 'id', type: String, description: 'Id by category' })
 	@ApiResponse({
-		status: 200,
+		status: 204,
 		description: 'delete category by id succsessfully',
-		type: CategoryDto,
 	})
-	@Delete(':id')
+	@Delete('delete/:id')
 	remove(@Param('id') id: string) {
 		return this.categoriesService.remove(id);
 	}

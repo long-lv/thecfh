@@ -1,15 +1,18 @@
 import {
 	BadRequestException,
+	HttpStatus,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PAGINATION } from 'src/util/constaint';
+import { GenerateDataUtil } from 'src/util/generate-data.util';
+import { MESSAGE_UTIL } from 'src/util/message-data.utils';
+import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { GenerateDataUtil } from 'src/util/generate-data.util';
-import { MESSAGE_UTIL } from 'src/util/message-data.utils';
+import { IFindAllParams } from './type/category.type';
 @Injectable()
 export class CategoriesService {
 	constructor(
@@ -31,6 +34,7 @@ export class CategoriesService {
 		return {
 			message: MESSAGE_UTIL.CREATE_SUCCESS('category'),
 			data: savedCategory,
+			statusCode: HttpStatus.CREATED,
 		};
 	}
 
@@ -39,20 +43,20 @@ export class CategoriesService {
 		limit,
 		keyword,
 		order = 'createdAt-DESC',
-	}: {
-		page: string;
-		limit: string;
-		keyword?: string;
-		order?: string;
-	}) {
+	}: IFindAllParams) {
 		const { size, skip, sortKey, sortValue } =
 			GenerateDataUtil.paginationFields({
 				page,
-				size: limit,
+				size: limit ?? PAGINATION.SIZE.toString(),
 				sort: order,
 			});
 
-		const query = this.categoriesRepository.createQueryBuilder('categories');
+		const query = this.categoriesRepository.createQueryBuilder('categories').select([
+			'categories.id',
+			'categories.name',
+			'categories.createdAt',
+			'categories.updatedAt'
+		]);
 		if (keyword) {
 			const escapedSearch = keyword.trim().replace(/[%_]/g, '\\$&');
 			query.where('categories.name LIKE :keyword', {
@@ -60,9 +64,10 @@ export class CategoriesService {
 			});
 		}
 
-		query.orderBy(`categories.${sortKey}`, sortValue);
+		query.orderBy(`categories.${sortKey}`, sortValue)
+		.skip(skip)
+		.take(size);
 
-		query.skip(skip).take(size);
 
 		const [data, total] = await query.getManyAndCount();
 
@@ -71,6 +76,7 @@ export class CategoriesService {
 				total,
 				limit: size,
 				page,
+				totalPage: Math.ceil(total / size),
 			},
 			data,
 		};
@@ -118,6 +124,7 @@ export class CategoriesService {
 		return {
 			messagae: MESSAGE_UTIL.UPDATE_SUCCESS(id, 'category'),
 			data: updated,
+			statusCode: HttpStatus.OK,
 		};
 	}
 
@@ -135,7 +142,7 @@ export class CategoriesService {
 		}
 		return {
 			message: MESSAGE_UTIL.DELETE_SUCCESS(id, `category`),
-			data: checkExists?.data,
+			statusCode: HttpStatus.NO_CONTENT,
 		};
 	}
 }

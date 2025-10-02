@@ -1,26 +1,221 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PAGINATION } from 'src/util/constaint';
+import { GenerateDataUtil } from 'src/util/generate-data.util';
+import { MESSAGE_UTIL } from 'src/util/message-data.utils';
+import { Not, Repository } from 'typeorm';
+import { CategoriesService } from '../categories/categories.service';
+import { UploadsService } from '../uploads/uploads.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ProductListQueryDto } from './dto/product-list-query.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
-  }
+	constructor(
+		@InjectRepository(Product)
+		private productRepository: Repository<Product>,
+		private categoryService: CategoriesService,
+		private uploadService: UploadsService,
+	) { }
+	async create(createProductDto: CreateProductDto, file?: Express.Multer.File) {
+		const [existingProduct, category] = await Promise.all([
+			this.productRepository.findOne({
+				where: { name: createProductDto.name },
+				withDeleted: false
+			}),
+			this.categoryService.findOne(createProductDto.categoryId),
+		]);
 
-  findAll() {
-    return `This action returns all products`;
-  }
+		if (existingProduct) {
+			throw new BadRequestException(MESSAGE_UTIL.ALREADY_EXISTS('product'));
+		}
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
+		if (!category) {
+			throw new BadRequestException(MESSAGE_UTIL.NOT_FOUND('category'));
+		}
+		let imageUrl = '';
+		if (file) {
+			try {
+				const uploaded = await this.uploadService.uploadFile(file);
+				imageUrl = uploaded.url;
+			} catch (err) {
+				throw new BadRequestException(MESSAGE_UTIL.UPLOAD_FAIL);
+			}
+		}
+		const product = this.productRepository.create({
+			...createProductDto,
+			imgUrl: imageUrl,
+			price: createProductDto.price.toString(),
+			categoryId: Number(createProductDto.categoryId),
+		});
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
+		const savedProduct = await this.productRepository.save(product);
+		if (!savedProduct) {
+			throw new BadRequestException(MESSAGE_UTIL.CREATE_FAIL);
+		}
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
-  }
+		return {
+			message: MESSAGE_UTIL.CREATE_SUCCESS('product'),
+			data: savedProduct,
+			statusCode: HttpStatus.CREATED,
+		};
+	}
+
+	async findAll(query: ProductListQueryDto) {
+		let { page = PAGINATION.PAGE, size= PAGINATION.SIZE, keyword, order= 'createdAt-DESC'} = query;
+		const paginationData = GenerateDataUtil.paginationFields({
+			page: page.toString(),
+			size: size.toString(),
+			sort: order,
+		});
+		const queryBuilder = this.productRepository.createQueryBuilder('product')
+		.leftJoin('product.category', 'category')
+
+		if (keyword) {
+			const escapedKeyword = keyword.trim().replace(/[%_]/g, '\\$&');
+			queryBuilder.where(
+				'product.name LIKE :keyword OR product.description LIKE :keyword',
+				{ keyword: `%${escapedKeyword}%`}
+			)
+		}
+		queryBuilder.orderBy(`product.${paginationData.sortKey}`, paginationData.sortValue)
+		.skip(paginationData.skip)
+		.take(paginationData.size)
+
+		const [data, total] = await queryBuilder.getManyAndCount();
+		return {
+			meta: {
+				total,
+				limit: size,
+				page,
+				totalPage: Math.ceil(total / Number(size)),
+			},
+			data
+		}
+	}
+
+	async findOne(id: string) {
+		const product = await this.productRepository.findOne({
+			where: { id },
+			relations: ['category'], // name relation in entity
+			select: {
+				id: true,
+				name: true,
+				description: true,
+				price: true,
+				imgUrl: true,
+				categoryId: true,
+				createdAt: true,
+				updatedAt: true,
+				category: {
+					id: true,
+					name: true,
+				}
+			}
+		})
+
+		const transformedProduct = {
+			...product,
+			categoryName: product?.category.name
+		}
+
+		delete transformedProduct.category;
+		
+		if (!product) {
+			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
+		}
+
+		return {
+			message: MESSAGE_UTIL.GET_SUCCESS('product'),
+			data: transformedProduct,
+		}
+	}
+
+	async update(id: string, updateProductDto: UpdateProductDto, file?: Express.Multer.File) {
+		const [productExists, categoryExists,] = await Promise.all([
+			await this.productRepository.findOne({
+				where: {id}
+			}),
+			this.categoryService.findOne(String(updateProductDto.categoryId))
+		])
+
+		if( !productExists) { 
+			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
+		}
+
+		if (!categoryExists) {
+			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('category'));
+		}
+
+		if (updateProductDto.name) {
+			const productNameExists = await this.productRepository.findOne({
+				where: { 
+					name: updateProductDto.name,
+					id: Not((id))
+				},
+				withDeleted: true
+			});
+
+			if (productNameExists) {
+				throw new BadRequestException(MESSAGE_UTIL.ALREADY_EXISTS('product name'));
+			}
+
+			productExists.name = updateProductDto.name;
+		}
+
+		if (file) {
+			try {
+				const uploaded = await this.uploadService.uploadFile(file);
+				productExists.imgUrl = uploaded.url;
+			} catch (error) { 
+				throw new BadRequestException(MESSAGE_UTIL.UPLOAD_FAIL);
+			}
+		}
+
+		if (updateProductDto.categoryId) {
+			const category = await this.categoryService.findOne(updateProductDto.categoryId);
+			if (!category) {
+				throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('category'));
+			}
+			productExists.categoryId = Number(updateProductDto.categoryId);
+		}
+
+		const updateProductDtoData = { ...updateProductDto, price: updateProductDto.price?.toString(), categoryId: Number(updateProductDto.categoryId) };
+		const updatedProduct = this.productRepository.merge(productExists, updateProductDtoData);
+		const savedProduct = await this.productRepository.save(updatedProduct);
+		if (!savedProduct) {
+			throw new BadRequestException(MESSAGE_UTIL.UPDATE_FAIL(id, 'product'));
+		}
+		return {
+			message: MESSAGE_UTIL.UPDATE_SUCCESS(id, 'product'),
+			data: savedProduct,
+			statusCode: HttpStatus.OK,
+		}
+		
+	}
+
+	async remove(id: string) {
+		const product = await this.productRepository.findOne({
+			where: {id}
+		})
+
+		if (!product) {
+			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
+		}
+
+		const deletedProduct = await this.productRepository.softDelete(id);
+
+		if (!deletedProduct) {
+			throw new BadRequestException(MESSAGE_UTIL.DELETE_FAIL);
+		}
+
+		return {
+			message: MESSAGE_UTIL.DELETE_SUCCESS(id, 'product'),
+			statusCode: HttpStatus.NO_CONTENT,
+		}
+
+	}
+
 }
