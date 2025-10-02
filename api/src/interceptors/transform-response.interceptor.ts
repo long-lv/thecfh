@@ -1,16 +1,17 @@
 import {
+	CallHandler,
+	ExecutionContext,
 	Injectable,
 	NestInterceptor,
-	ExecutionContext,
-	CallHandler,
 } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Request } from 'express';
 import { PaginatedResponse } from 'src/common/types/paginationResponse.type';
 import { SuccessResponse } from 'src/common/types/successResponse.type';
 type ResponseWithMessage<T> = {
 	message: string;
+	statusCode?: number;
 	data: T;
 };
 
@@ -24,6 +25,7 @@ export class TransformResponseInterceptor<T>
 	): Observable<SuccessResponse<T>> {
 		const ctx = context.switchToHttp();
 		const request = ctx.getRequest<Request>();
+		const response = ctx.getResponse<Response>();
 
 		return next.handle().pipe(
 			map((responseData: T | PaginatedResponse<T>): SuccessResponse<T> => {
@@ -51,7 +53,11 @@ export class TransformResponseInterceptor<T>
 					'message' in responseData &&
 					'data' in responseData
 				) {
-					const { message, data } = responseData as ResponseWithMessage<T>;
+					const { message, data, statusCode } = responseData as ResponseWithMessage<T>;
+					if (statusCode) {
+						response.status(statusCode);
+						return { ...baseResponse, statusCode, message, data };
+					}
 					return { ...baseResponse, message, data };
 				}
 

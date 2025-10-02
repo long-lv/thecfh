@@ -20,6 +20,7 @@ import { CommentsModule } from './modules/comments/comments.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { InquiriesModule } from './modules/inquiries/inquiries.module';
 import { ChatsModule } from './modules/chats/chats.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 @Module({
 	imports: [
 		TypeOrmModule.forRoot(databaseConfig),
@@ -39,6 +40,7 @@ import { ChatsModule } from './modules/chats/chats.module';
 		BannersModule,
 		InquiriesModule,
 		ChatsModule,
+		UploadsModule,
 		// ConfigModule.forRoot({ isGlobal: true }),
 	],
 	controllers: [AppController],
