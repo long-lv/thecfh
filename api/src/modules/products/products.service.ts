@@ -153,9 +153,9 @@ export class ProductsService {
 			const productNameExists = await this.productRepository.findOne({
 				where: { 
 					name: updateProductDto.name,
-					id: Not((id))
+					id: Not((id)) // not check product currrent
 				},
-				withDeleted: true
+				withDeleted: true // check all product deleted
 			});
 
 			if (productNameExists) {
