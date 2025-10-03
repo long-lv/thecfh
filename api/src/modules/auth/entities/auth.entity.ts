@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { Role } from '../type/user.type';
+import { Role, StatusUser } from '../type/user.type';
 import { BaseEntity } from 'src/core/database/base.entity';
 import { Cart } from 'src/modules/carts/entities/cart.entity';
 import { Oder } from 'src/modules/oders/entities/oder.entity';
@@ -12,6 +12,9 @@ export class Auth extends BaseEntity {
 	@Column({ unique: true })
 	email: string;
 
+	@Column({ unique: true })
+	name: string;
+
 	@Column()
 	password: string;
 
@@ -21,6 +24,13 @@ export class Auth extends BaseEntity {
 		default: Role.USER,
 	})
 	role: Role;
+
+	@Column({
+		type: 'enum',
+		enum: StatusUser,
+		default: StatusUser.VERIFY,
+	})
+	status: StatusUser;
 
 	@OneToMany(() => Cart, (cart) => cart.user)
 	carts: Cart[];
@@ -45,4 +55,7 @@ export class Auth extends BaseEntity {
 
 	@OneToMany(() => Chat, (chat) => chat.receiverId)
 	receiverChats: Chat[];
+
+	@Column({ nullable: true })
+	hashedRefreshToken: string;
 }
