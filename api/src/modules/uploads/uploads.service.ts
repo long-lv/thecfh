@@ -34,4 +34,10 @@ export class UploadsService {
 			throw new InternalServerErrorException(error);
 		}
 	}
+
+	async multiUploadFiles(files: Express.Multer.File[]) {
+		const uploaded = await Promise.all(files.map((f) => this.uploadFile(f)));
+
+		return uploaded.map((up: { url: string; key: string }) => up.url);
+	}
 }
