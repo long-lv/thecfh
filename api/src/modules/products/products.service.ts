@@ -1,4 +1,9 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+	BadRequestException,
+	HttpStatus,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PAGINATION } from 'src/util/constaint';
 import { GenerateDataUtil } from 'src/util/generate-data.util';
@@ -18,12 +23,15 @@ export class ProductsService {
 		private productRepository: Repository<Product>,
 		private categoryService: CategoriesService,
 		private uploadService: UploadsService,
-	) { }
-	async create(createProductDto: CreateProductDto, file?: Express.Multer.File) {
+	) {}
+	async create(
+		createProductDto: CreateProductDto,
+		files?: Express.Multer.File[],
+	) {
 		const [existingProduct, category] = await Promise.all([
 			this.productRepository.findOne({
 				where: { name: createProductDto.name },
-				withDeleted: false
+				withDeleted: false,
 			}),
 			this.categoryService.findOne(createProductDto.categoryId),
 		]);
@@ -35,12 +43,13 @@ export class ProductsService {
 		if (!category) {
 			throw new BadRequestException(MESSAGE_UTIL.NOT_FOUND('category'));
 		}
+
 		let imageUrl = '';
-		if (file) {
+		if (files && files.length > 0) {
 			try {
-				const uploaded = await this.uploadService.uploadFile(file);
-				imageUrl = uploaded.url;
-			} catch (err) {
+				const uploadedFile = await this.uploadService.multiUploadFiles(files);
+				imageUrl = uploadedFile.join(';');
+			} catch {
 				throw new BadRequestException(MESSAGE_UTIL.UPLOAD_FAIL);
 			}
 		}
@@ -64,29 +73,38 @@ export class ProductsService {
 	}
 
 	async findAll(query: ProductListQueryDto) {
-		let { page = PAGINATION.PAGE, size= PAGINATION.SIZE, keyword, order= 'createdAt-DESC'} = query;
+		let {
+			page = PAGINATION.PAGE,
+			size = PAGINATION.SIZE,
+			keyword,
+			order = 'createdAt-DESC',
+		} = query;
 		const paginationData = GenerateDataUtil.paginationFields({
 			page: page.toString(),
 			size: size.toString(),
 			sort: order,
 		});
-		const queryBuilder = this.productRepository.createQueryBuilder('product')
-		.leftJoin('product.category', 'category')
+		const queryBuilder = this.productRepository
+			.createQueryBuilder('product')
+			.leftJoin('product.category', 'category');
 
 		if (query.categoryId) {
-			queryBuilder.where('product.categoryId = :categoryId', { categoryId: query.categoryId})
+			queryBuilder.where('product.categoryId = :categoryId', {
+				categoryId: query.categoryId,
+			});
 		}
 
 		if (keyword) {
 			const escapedKeyword = keyword.trim().replace(/[%_]/g, '\\$&');
 			queryBuilder.where(
 				'product.name LIKE :keyword OR product.description LIKE :keyword',
-				{ keyword: `%${escapedKeyword}%`}
-			)
+				{ keyword: `%${escapedKeyword}%` },
+			);
 		}
-		queryBuilder.orderBy(`product.${paginationData.sortKey}`, paginationData.sortValue)
-		.skip(paginationData.skip)
-		.take(paginationData.size)
+		queryBuilder
+			.orderBy(`product.${paginationData.sortKey}`, paginationData.sortValue)
+			.skip(paginationData.skip)
+			.take(paginationData.size);
 
 		const [data, total] = await queryBuilder.getManyAndCount();
 		return {
@@ -96,8 +114,8 @@ export class ProductsService {
 				page,
 				totalPage: Math.ceil(total / Number(size)),
 			},
-			data
-		}
+			data,
+		};
 	}
 
 	async findOne(id: string) {
@@ -116,17 +134,17 @@ export class ProductsService {
 				category: {
 					id: true,
 					name: true,
-				}
-			}
-		})
+				},
+			},
+		});
 
 		const transformedProduct = {
 			...product,
-			categoryName: product?.category.name
-		}
+			categoryName: product?.category.name,
+		};
 
 		delete transformedProduct.category;
-		
+
 		if (!product) {
 			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
 		}
@@ -134,18 +152,22 @@ export class ProductsService {
 		return {
 			message: MESSAGE_UTIL.GET_SUCCESS('product'),
 			data: transformedProduct,
-		}
+		};
 	}
 
-	async update(id: string, updateProductDto: UpdateProductDto, file?: Express.Multer.File) {
-		const [productExists, categoryExists,] = await Promise.all([
+	async update(
+		id: string,
+		updateProductDto: UpdateProductDto,
+		files?: Express.Multer.File[],
+	) {
+		const [productExists, categoryExists] = await Promise.all([
 			await this.productRepository.findOne({
-				where: {id}
+				where: { id },
 			}),
-			this.categoryService.findOne(String(updateProductDto.categoryId))
-		])
+			this.categoryService.findOne(String(updateProductDto.categoryId)),
+		]);
 
-		if( !productExists) { 
+		if (!productExists) {
 			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
 		}
 
@@ -155,39 +177,59 @@ export class ProductsService {
 
 		if (updateProductDto.name) {
 			const productNameExists = await this.productRepository.findOne({
-				where: { 
+				where: {
 					name: updateProductDto.name,
-					id: Not((id)) // not check product currrent
+					id: Not(id), // not check product currrent
 				},
-				withDeleted: true // check all product deleted
+				withDeleted: true, // check all product deleted
 			});
 
 			if (productNameExists) {
-				throw new BadRequestException(MESSAGE_UTIL.ALREADY_EXISTS('product name'));
+				throw new BadRequestException(
+					MESSAGE_UTIL.ALREADY_EXISTS('product name'),
+				);
 			}
 
 			productExists.name = updateProductDto.name;
 		}
 
-		if (file) {
+		let filterFileNotRemove: string[] = [];
+		if (updateProductDto.fileRemove) {
+			const fileExists = productExists.imgUrl.split(';');
+			filterFileNotRemove = fileExists.filter(
+				(file) => !updateProductDto.fileRemove?.includes(file),
+			);
+		}
+
+		if (files) {
 			try {
-				const uploaded = await this.uploadService.uploadFile(file);
-				productExists.imgUrl = uploaded.url;
-			} catch (error) { 
+				const uploadedFile = await this.uploadService.multiUploadFiles(files);
+				const mergeFileUpdated = [...uploadedFile, ...filterFileNotRemove];
+				productExists.imgUrl = mergeFileUpdated.join(';');
+			} catch {
 				throw new BadRequestException(MESSAGE_UTIL.UPLOAD_FAIL);
 			}
 		}
 
 		if (updateProductDto.categoryId) {
-			const category = await this.categoryService.findOne(updateProductDto.categoryId);
+			const category = await this.categoryService.findOne(
+				updateProductDto.categoryId,
+			);
 			if (!category) {
 				throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('category'));
 			}
 			productExists.categoryId = Number(updateProductDto.categoryId);
 		}
 
-		const updateProductDtoData = { ...updateProductDto, price: updateProductDto.price?.toString(), categoryId: Number(updateProductDto.categoryId) };
-		const updatedProduct = this.productRepository.merge(productExists, updateProductDtoData);
+		const updateProductDtoData = {
+			...updateProductDto,
+			price: updateProductDto.price?.toString(),
+			categoryId: Number(updateProductDto.categoryId),
+		};
+		const updatedProduct = this.productRepository.merge(
+			productExists,
+			updateProductDtoData,
+		);
 		const savedProduct = await this.productRepository.save(updatedProduct);
 		if (!savedProduct) {
 			throw new BadRequestException(MESSAGE_UTIL.UPDATE_FAIL(id, 'product'));
@@ -196,14 +238,13 @@ export class ProductsService {
 			message: MESSAGE_UTIL.UPDATE_SUCCESS(id, 'product'),
 			data: savedProduct,
 			statusCode: HttpStatus.OK,
-		}
-		
+		};
 	}
 
 	async remove(id: string) {
 		const product = await this.productRepository.findOne({
-			where: {id}
-		})
+			where: { id },
+		});
 
 		if (!product) {
 			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
@@ -218,8 +259,6 @@ export class ProductsService {
 		return {
 			message: MESSAGE_UTIL.DELETE_SUCCESS(id, 'product'),
 			statusCode: HttpStatus.NO_CONTENT,
-		}
-
+		};
 	}
-
 }

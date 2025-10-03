@@ -8,9 +8,10 @@ import {
 	Put,
 	Query,
 	UploadedFile,
+	UploadedFiles,
 	UseInterceptors
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductListQueryDto } from './dto/product-list-query.dto';
@@ -22,7 +23,8 @@ export class ProductsController {
 	constructor(private readonly productsService: ProductsService) { }
 
 	@Post('create')
-	@UseInterceptors(FileInterceptor('image')) // key in form-data is "image"
+	// @UseInterceptors(FileInterceptor('image')) // key in form-data is "image" | FileInterceptor: upload 1 file
+	@UseInterceptors(FilesInterceptor('images')) // key in form-data is "images" | FilesInterceptor: multi upload file
 	@ApiConsumes('multipart/form-data')
 	@ApiResponse({
 		status: 201,
@@ -41,7 +43,7 @@ export class ProductsController {
 						name: { type: 'string', example: 'iPhone 15 Pro' },
 						description: { type: 'string', example: 'Latest iPhone with advanced features' },
 						price: { type: 'string', example: '25000000' },
-						imgUrl: { type: 'string', example: 'https://example.com/image.jpg' },
+						imgUrl: { type: 'array', example: '[https://example.com/image.jpg, https://example.com/image_2.jpg ]' },
 						categoryId: { type: 'number', example: 1 },
 						categoryName: { type: 'string', example: 'Electronics' },
 						createdAt: { type: 'string', format: 'date-time' },
@@ -53,13 +55,14 @@ export class ProductsController {
 	})
 	@ApiResponse({
 		status: 400,
-		description: 'Bad request - validation errors'
+		description: 'Bad request - validation errors',
 	})
 	create(
 		@Body() createProductDto: CreateProductDto,
-		@UploadedFile() file: Express.Multer.File,
+		// @UploadedFile() file: Express.Multer.File, // upload 1 file
+		@UploadedFiles() files: Express.Multer.File[], // multy upload
 	) {
-		return this.productsService.create(createProductDto, file);
+		return this.productsService.create(createProductDto, files);
 	}
 
 	@Get('list')
@@ -181,7 +184,7 @@ export class ProductsController {
 	}
 
 	@Put('update/:id')
-	@UseInterceptors(FileInterceptor('image'))
+	@UseInterceptors(FilesInterceptor('images'))
 	@ApiConsumes('multipart/form-data')
 	@ApiBody({
 		schema: {
@@ -244,8 +247,8 @@ export class ProductsController {
 	})
 	update(@Param('id') id: string,
 		@Body() updateProductDto: UpdateProductDto,
-		@UploadedFile() file: Express.Multer.File) {
-		return this.productsService.update(id, updateProductDto, file);
+		@UploadedFiles() files: Express.Multer.File[]) {
+		return this.productsService.update(id, updateProductDto, files);
 	}
 
 	@Delete('delete/:id')
