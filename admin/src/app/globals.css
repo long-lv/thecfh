@@ -1,0 +1,154 @@
+@import "tailwindcss";
+@import '../assets/fonts/font.css';
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif !important;
+}
+
+:root {
+  --min-width: 1440px;
+  --color-text-1: #242424;
+  --color-text-2: #424242;
+  --color-text-3: #707070;
+  --color-text-4: #959595;
+  --color-text-5: #bbbbbb;
+  --color-text-6: #FFFFFF;
+  --color-text-support-info-4: #001141;
+  --color-white: #fff;
+  --color-black: #000000;
+  --color-border-default: #F0F0F0;
+  --color-border-1: #e0e0e0;
+  --color-border-2: #d1e7dd;
+  --color-border2: #D2D2D2;
+  --color-border-3: #e34f2f;
+  --color-border-4: #eee;
+  --color-support-error-3: #e97259;
+  --color-icon-1: #198754;
+  --color-icon-2: #6c757d;
+  --color-background-1: #fafafa;
+  --color-background-2: #f5f5f5;
+  --color-background-3: #333;
+  --color-background-4: #EBEBEB;
+  --color-background-white: #FFFFFF;
+  --color-button-primary-active: #0747A6;
+  --color-focus: #5E51FF33;
+  --color-button-1: #666;
+  --color-primary-10: #ecefff;
+  --color-primary-60: #4233ff;
+  --color-primary-100: #1f1551;
+  --color-primary10: #EDF5FF;
+  --color-primary20: #D0E2FF;
+  --color-primary30: #A6C8FF;
+  --color-primary40: #4C9AFF;
+  --color-primary40-blue: #5959ff;
+  --color-primary50: #2684FF;
+  --color-primary50-key: #4232FF;
+  --color-primary60: #0065FF;
+  --color-primary60-blue: #5e51ff;
+  --color-primary70: #d31418;
+  --color-primary80: #b71216;
+  --color-primary90: #9b1013;
+  --color-primary-text-default: #001141; 
+  --color-primary100: #7c0c0e;
+  --color-secondary90: #424242;
+  --color-secondary20: #f6f6f6;
+  --color-gray-15: #f0f0f0;
+  --color-gray-30: #e0e0e0;
+  --color-gray-50: #bbbbbb;
+  --color-gray-60: #959595;
+  --color-gray-70: #707070;
+  --color-gray-90: #242424;
+  --color-red-60: #e34f2f;
+  --color-neutral-gray-15: #f0f0f0;
+  --color-blue10: #eef4ff;
+  --color-blue40: #a1d3f8;
+  --color-blue100: #001639;
+  --color-red10: #fcedea;
+  --color-orange10: #fcf2e6;
+  --color-yellow10: #fffbe6;
+  --color-lightGreen10: #f5faf0;
+  --color-green10: #ebf6f1;
+  --color-cyan10: #f2fcfb;
+  --color-seal10: #eff8f7;
+  --color-lightBlue10: #f1f9fe;
+  --color-indigo10: #f1f1ff;
+  --color-purple10: #f2eeff;
+  --color-magenta10: #faf2fc;
+  --color-burgundy10: #f7eef1;
+  --color-button-secondary: #242424;
+  --color-button-disabled-bg: #ebebeb;
+  --color-button-disabled-text-on-color: #959595;
+  --color-button-contrast-active-text: #0052CC;
+  --color-yellow-20: #fff1b3;
+  --color-yellow-70: #e8bf08;
+  --color-light-blue-40: #72bef4;
+  --color-yellow-40: #ffe15a;
+  --color-yellow-60: #ffd209;
+  --color-teal-40: #91cfc9;
+  --color-teal-60: #5bb7af;
+  --color-red-40: #ec8974;
+  --color-light-green-default: #f5faf0;
+  --color-light-green-text: #40562b;
+  --color-yellow-20: #fff1b3;
+  --color-yellow-70: #e8bf08;
+  --color-purple-60: #7856ff;
+  --color-green-70: #62ba90;
+  --color-toggle-primary-3: #7c0c0e;
+  --color-stroke: #EF151E33;
+  --color-blue-500: #0065FF;
+  --tag-primary-default: #EDF5FF;
+  --tag-primary-text: #001141;
+  --tag-blue-default: #EEF4FF;
+  --tag-blue-text: #001639;
+  --tag-indigo-default: #F1F1FF;
+  --tag-indigo-text: #323169;
+  --tag-teal-default: #EFF8F7;
+  --tag-teal-text: #264D4A;
+  --tag-green-default: #F5FAF0;
+  --tag-green-text: #40562B;
+  --tag-orange-default: #FCF2E6;
+  --tag-orange-text: #5E3200;
+  --tag-magenta-default: #FAF2FC;
+  --tag-magenta-text: #55365C;
+  --tag-red-default: #FCEDEA;
+  --tag-red-text: #5F2114;
+  --tag-gray-default: #E0E0E0;
+  --color-duration-blur: #00000040;
+  --bg-blur-16: rgba(0, 0, 0, 0.25);
+  --font-size-12: 12px;
+  --line-height-18: 18px;
+  --font-weight-400: 400;
+  --z-index-auto: auto;
+  /* Base app layout */
+  --z-index-body: 0;
+  --z-index-body-header: 10;
+  --z-index-body-content: 20;
+  /* Nested content (e.g., sections) */
+  --z-index-section-1: 30;
+  --z-index-section-2: 40;
+  --z-index-section-3: 50;
+  /* Interactive UI components */
+  --z-index-dropdown: 100;
+  --z-index-sticky-header: 200;
+  --z-index-sticky-pagination: 200;
+  --z-index-floating-button: 250;
+  --z-index-tooltip: 300;
+  /* Overlay elements */
+  --z-index-modal-backdrop: 400;
+  --z-index-modal: 500;
+  --z-index-toast: 600;
+  --z-index-fullscreen-overlay: 700;
+  --z-index-tooltip-above-everything: 800;
+  --z-index-fixed-header: 900;
+  --z-index-sidebar-overlay: 950;
+  --z-index-loading-overlay: 1000;
+  /* Debug/dev tools or critical alerts */
+  --z-index-dev-overlay: 9999;
+}
+
+body {
+  min-width: var(--min-width);
+}
+
