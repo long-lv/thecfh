@@ -11,4 +11,6 @@ export const MESSAGE_UTIL = {
 	DELETE_FAIL: (id, field) => `This action deleted a #${id} ${field} false`,
 	UPDATE_FAIL: (id, field) => `This action updated a #${id} ${field} false`,
 	UPLOAD_FAIL: 'Upload file failed!',
+	LOGIN_SUCCESS: 'Login successfully',
+	LOGIN_FAIL: 'Email or password wrong!, please again',
 };

@@ -21,15 +21,16 @@
 		"migration:generate": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d ./src/data-source.ts ./src/migrations",
 		"migration:run": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
 		"migration:revert": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts",
-		"mg": "typeorm-ts-node-commonjs migration:generate ./src/migrations -d ./src/data-source.ts",
-		"mr": "typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts",
-		"mv": "typeorm-ts-node-commonjs migration:revert -d ./src/data-source.ts"
+		"mg": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d ./src/data-source.ts",
+		"mr": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
+		"mv": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts"
 	},
 	"dependencies": {
 		"@nestjs/common": "^11.1.6",
 		"@nestjs/config": "^4.0.2",
 		"@nestjs/core": "^11.1.6",
 		"@nestjs/jwt": "^11.0.0",
+		"@nestjs/passport": "^11.0.5",
 		"@nestjs/platform-express": "^11.1.6",
 		"@nestjs/sequelize": "^11.0.0",
 		"@nestjs/swagger": "^11.2.0",
@@ -47,6 +48,7 @@
 		"nodemailer": "^7.0.6",
 		"passport": "^0.7.0",
 		"passport-jwt": "^4.0.1",
+		"passport-local": "^1.0.0",
 		"reflect-metadata": "^0.2.2",
 		"rxjs": "^7.8.1",
 		"sequelize": "^6.37.7",
