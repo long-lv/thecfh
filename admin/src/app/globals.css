@@ -9,6 +9,9 @@
 
 :root {
   --min-width: 1440px;
+  --color-gray-border: #C7C7C7;
+  --color-gray-text-input: #787878;
+  --color-gray-border-200: #EDEDED;
   --color-text-1: #242424;
   --color-text-2: #424242;
   --color-text-3: #707070;
@@ -18,6 +21,10 @@
   --color-text-support-info-4: #001141;
   --color-white: #fff;
   --color-black: #000000;
+  --color-blue-200: #377DFF;
+  --color-blue-100: #dbeaf8;
+  --color-blue-10: #EDF5FF;
+  --color-red-200: #DC0000;
   --color-border-default: #F0F0F0;
   --color-border-1: #e0e0e0;
   --color-border-2: #d1e7dd;
@@ -92,7 +99,6 @@
   --color-light-green-default: #f5faf0;
   --color-light-green-text: #40562b;
   --color-yellow-20: #fff1b3;
-  --color-yellow-70: #e8bf08;
   --color-purple-60: #7856ff;
   --color-green-70: #62ba90;
   --color-toggle-primary-3: #7c0c0e;
@@ -146,6 +152,9 @@
   --z-index-loading-overlay: 1000;
   /* Debug/dev tools or critical alerts */
   --z-index-dev-overlay: 9999;
+
+  /* line height */
+  --line-height-100-percent: 100%;
 }
 
 body {

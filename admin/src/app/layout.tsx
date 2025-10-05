@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LoadingProvider } from "../contexts/LoadingContext";
+import { ToastProvider } from "../contexts/ToastContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased" suppressHydrationWarning={true}>
-        {children}
+        <LoadingProvider>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </LoadingProvider>
       </body>
     </html>
   );
