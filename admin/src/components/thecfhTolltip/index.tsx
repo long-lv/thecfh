@@ -26,6 +26,7 @@ export default function ThecfhTooltip({
           sx: {
             backgroundColor: 'var(--color-text-1)',
             color: 'var(--color-white)',
+            fontSize: '14px',
             '& .MuiTooltip-arrow': {
               color: 'var(--color-text-1)',
             },
