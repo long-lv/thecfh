@@ -17,6 +17,7 @@
     "@mui/material": "^7.3.4",
     "@mui/x-date-pickers": "^8.12.0",
     "@tanstack/react-query": "^5.90.2",
+    "axios": "^1.12.2",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.18",
     "next": "15.5.3",
@@ -33,20 +34,20 @@
     "@storybook/addon-docs": "^9.1.10",
     "@storybook/addon-onboarding": "^9.1.10",
     "@storybook/addon-vitest": "^9.1.10",
+    "@storybook/nextjs-vite": "^9.1.10",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/browser": "^3.2.4",
+    "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
     "eslint-plugin-storybook": "^9.1.10",
+    "playwright": "^1.55.1",
     "storybook": "^9.1.10",
     "tailwindcss": "^4.1.14",
     "typescript": "^5",
-    "@storybook/nextjs-vite": "^9.1.10",
-    "vitest": "^3.2.4",
-    "@vitest/browser": "^3.2.4",
-    "playwright": "^1.55.1",
-    "@vitest/coverage-v8": "^3.2.4"
+    "vitest": "^3.2.4"
   }
 }

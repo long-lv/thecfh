@@ -11,6 +11,7 @@ import ThecfhPaginator from "@/src/components/thecfhPaginator";
 import { Box, Typography, TextField, Chip, IconButton, Tooltip } from "@mui/material";
 import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
 import { useGlobalToast } from "@/src/hooks/useGlobalToast";
+import { api } from "@/src/utils/apiUtil";
 import dayjs from "dayjs";
 import { useEffect, useState, useCallback } from "react";
 
@@ -51,6 +52,10 @@ const Categories = () => {
   const [tableLoading, setTableLoading] = useState(false);
   const [sortField, setSortField] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  
+  // JSONPlaceholder API test states
+  const [jsonPlaceholderData, setJsonPlaceholderData] = useState<unknown[]>([]);
+  const [apiLoading, setApiLoading] = useState(false);
   const renderTitleTooltip = () => {
     return (
       <p className="text-red-500">
@@ -232,6 +237,98 @@ const Categories = () => {
       position: 'bottom-left',
       duration: 6000,
     });
+  };
+
+  // JSONPlaceholder API test functions
+  const testJsonPlaceholderAPI = async () => {
+    setApiLoading(true);
+    try {
+      console.log('🧪 Testing JSONPlaceholder API...');
+      
+      // Test GET request to JSONPlaceholder
+      const response = await api.get('https://jsonplaceholder.typicode.com/posts?_limit=5');
+      console.log('✅ JSONPlaceholder GET Response:', response);
+      const data = response.data as unknown[];
+      setJsonPlaceholderData(data);
+      success(`Đã lấy ${data.length} posts từ JSONPlaceholder!`);
+      
+    } catch (err) {
+      console.error('❌ JSONPlaceholder API Error:', err);
+      error('Lỗi khi gọi API JSONPlaceholder!');
+    } finally {
+      setApiLoading(false);
+    }
+  };
+
+  const testJsonPlaceholderPOST = async () => {
+    setApiLoading(true);
+    try {
+      console.log('🧪 Testing JSONPlaceholder POST...');
+      
+      const newPost = {
+        title: 'Test Post từ Admin Panel',
+        body: 'Đây là test post từ API utility',
+        userId: 1
+      };
+      
+      const response = await api.post('https://jsonplaceholder.typicode.com/posts', newPost);
+      console.log('✅ JSONPlaceholder POST Response:', response);
+      success('Đã tạo post mới thành công!');
+      
+    } catch (err) {
+      console.error('❌ JSONPlaceholder POST Error:', err);
+      error('Lỗi khi tạo post mới!');
+    } finally {
+      setApiLoading(false);
+    }
+  };
+
+  const testJsonPlaceholderPUT = async () => {
+    setApiLoading(true);
+    try {
+      console.log('🧪 Testing JSONPlaceholder PUT...');
+      
+      const updatedPost = {
+        id: 1,
+        title: 'Updated Post từ Admin Panel',
+        body: 'Đây là post đã được cập nhật',
+        userId: 1
+      };
+      
+      const response = await api.put('https://jsonplaceholder.typicode.com/posts/1', updatedPost);
+      console.log('✅ JSONPlaceholder PUT Response:', response);
+      success('Đã cập nhật post thành công!');
+      
+    } catch (err) {
+      console.error('❌ JSONPlaceholder PUT Error:', err);
+      error('Lỗi khi cập nhật post!');
+    } finally {
+      setApiLoading(false);
+    }
+  };
+
+  const testJsonPlaceholderDELETE = async () => {
+    setApiLoading(true);
+    try {
+      console.log('🧪 Testing JSONPlaceholder DELETE...');
+      
+      const response = await api.delete('https://jsonplaceholder.typicode.com/posts/1');
+      console.log('✅ JSONPlaceholder DELETE Response:', response);
+      success('Đã xóa post thành công!');
+      
+    } catch (err) {
+      console.error('❌ JSONPlaceholder DELETE Error:', err);
+      error('Lỗi khi xóa post!');
+    } finally {
+      setApiLoading(false);
+    }
+  };
+
+  // Test function to check token
+  const testTokenCheck = () => {
+    console.log('🔍 Testing Token Check...');
+    console.log('📋 Check console logs above to see token details');
+    info('Kiểm tra console để xem chi tiết Bearer token!');
   };
 
   // Table columns configuration
@@ -447,6 +544,92 @@ const Categories = () => {
           <Box sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
             <Typography variant="body2" color="text.secondary">
               💡 Sử dụng: <code>showLoading(&apos;message&apos;)</code> và <code>hideLoading()</code>
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* API Test Demo */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            API Utility Test (JSONPlaceholder)
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
+            <ThecfhButton
+              label="Test GET API"
+              width="120px"
+              height="40px"
+              onClick={testJsonPlaceholderAPI}
+              disabled={apiLoading}
+              style={{ backgroundColor: '#4caf50', color: 'white' }}
+            />
+            <ThecfhButton
+              label="Test POST API"
+              width="120px"
+              height="40px"
+              onClick={testJsonPlaceholderPOST}
+              disabled={apiLoading}
+              style={{ backgroundColor: '#2196f3', color: 'white' }}
+            />
+            <ThecfhButton
+              label="Test PUT API"
+              width="120px"
+              height="40px"
+              onClick={testJsonPlaceholderPUT}
+              disabled={apiLoading}
+              style={{ backgroundColor: '#ff9800', color: 'white' }}
+            />
+            <ThecfhButton
+              label="Test DELETE API"
+              width="120px"
+              height="40px"
+              onClick={testJsonPlaceholderDELETE}
+              disabled={apiLoading}
+              style={{ backgroundColor: '#f44336', color: 'white' }}
+            />
+            <ThecfhButton
+              label="Check Token"
+              width="120px"
+              height="40px"
+              onClick={testTokenCheck}
+              style={{ backgroundColor: '#9c27b0', color: 'white' }}
+            />
+          </Box>
+          
+          {apiLoading && (
+            <Box sx={{ p: 2, backgroundColor: '#e3f2fd', borderRadius: 1, mb: 2 }}>
+              <Typography variant="body2" color="primary">
+                🔄 Đang gọi API... Vui lòng chờ
+              </Typography>
+            </Box>
+          )}
+          
+          {jsonPlaceholderData.length > 0 && (
+            <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1, mb: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                📋 Dữ liệu từ JSONPlaceholder:
+              </Typography>
+              {jsonPlaceholderData.map((post: unknown, index: number) => {
+                const postData = post as { id: number; title: string; userId: number };
+                return (
+                <Box key={postData.id} sx={{ mb: 1, p: 1, backgroundColor: 'white', borderRadius: 1 }}>
+                  <Typography variant="body2" fontWeight="bold">
+                    {index + 1}. {postData.title}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    ID: {postData.id} | User ID: {postData.userId}
+                  </Typography>
+                </Box>
+                );
+              })}
+            </Box>
+          )}
+          
+          <Box sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              💡 Test API utility với JSONPlaceholder - Kiểm tra console để xem chi tiết request/response
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              🔐 Bearer token sẽ được tự động thêm vào mọi request - Xem console logs để kiểm tra
             </Typography>
           </Box>
         </Box>
