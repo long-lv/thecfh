@@ -1,0 +1,227 @@
+.calendarWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.inputContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.inputContainer img {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+}
+
+.dateInput {
+  padding: 12px 40px 12px 14px;
+  border: 1px solid var(--color-border-1);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-text-1);
+  background: var(--color-background-white);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: var(--color-primary-10);
+}
+
+.dateInput:disabled {
+  background: var(--color-button-disabled-bg);
+  color: var(--color-button-disabled-text-on-color);
+  cursor: not-allowed;
+}
+
+.dateInput::placeholder {
+  color: var(--color-text-3);
+}
+
+
+.calendarContainer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background: var(--color-background-white);
+  border: 1px solid var(--color-border-1);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 4px;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--color-text-1);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.navButton:hover:not(:disabled) {
+  background-color: var(--color-primary-10);
+}
+
+.navButton:disabled {
+  color: var(--color-text-5);
+  cursor: not-allowed;
+}
+
+.monthYear {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-1);
+}
+
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.weekDay {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-2);
+  padding: 8px 4px;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  border-collapse: collapse;
+}
+
+.dayButton {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  color: var(--color-text-1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.dayButton:hover:not(:disabled) {
+  background-color: var(--color-primary-10);
+}
+
+.dayButton.selected:hover:not(:disabled),
+.dayButton.startDate:hover:not(:disabled),
+.dayButton.endDate:hover:not(:disabled) {
+  background-color: var(--color-blue-200) !important;
+  color: var(--color-white) !important;
+  border-radius: 2px !important;
+}
+
+.dayButton.otherMonth {
+  color: var(--color-text-5);
+}
+
+.dayButton.otherMonth:hover:not(:disabled) {
+  background-color: var(--color-primary-10);
+  color: var(--color-text-2);
+}
+
+.dayButton.today {
+  color: var(--color-blue-200);
+  font-weight: bold;
+}
+
+.dayButton.disabled {
+  color: var(--color-text-5);
+  cursor: not-allowed;
+}
+
+.dayButton.disabled:hover {
+  background: none;
+}
+
+/* Single date selection */
+.dayButton.selected {
+  background-color: var(--color-blue-200) !important;
+  color: var(--color-white) !important;
+  border-radius: 50% !important;
+}
+
+/* Ensure single date selection always has round shape */
+.dayButton.selected:not(.inRange) {
+  border-radius: 50% !important;
+  margin: 0 !important;
+}
+
+/* Range selection styles - seamless background */
+.dayButton.inRange {
+  background-color: var(--color-blue-100) !important;
+  color: var(--color-text-1) !important;
+  border-radius: 0 !important;
+  margin: 3px 0 0 0 !important;
+  position: relative;
+}
+
+.dayButton.startDate {
+  background-color: var(--color-blue-200) !important;
+  color: var(--color-white) !important;
+  border-radius: 50% 0 0 50% !important;
+}
+
+.dayButton.endDate {
+  background-color: var(--color-blue-200) !important;
+  color: var(--color-white) !important;
+  border-radius: 0 50% 50% 0 !important;
+}
+
+/* Special case: when start and end are the same date */
+.dayButton.startDate.endDate {
+  background-color: var(--color-blue-100) !important;
+  color: var(--color-white) !important;
+  border-radius: 50% !important;
+}
+
+/* Handle week boundaries for seamless connection */
+.dayButton.inRange:nth-child(7n+1) {
+  border-radius: 50% 0 0 50% !important;
+}
+
+.dayButton.inRange:nth-child(7n) {
+  border-radius: 0 50% 50% 0 !important;
+}
+
+/* Override hover for range */
+.dayButton.inRange:hover:not(:disabled) {
+  background-color: var(--color-blue-200) !important;
+  color: var(--color-white) !important;
+}
