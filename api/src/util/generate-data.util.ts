@@ -20,4 +20,8 @@ export class GenerateDataUtil {
 			sortValue: sortValue.split('-')[1].toUpperCase() as 'ASC' | 'DESC',
 		};
 	}
+
+	static generateTotalPage(total: number, size: number) {
+		return Math.ceil(total / size);
+	}
 }

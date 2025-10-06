@@ -23,9 +23,11 @@
 		"migration:revert": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts",
 		"mg": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d ./src/data-source.ts",
 		"mr": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
-		"mv": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts"
+		"mv": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts",
+		"seed": "ts-node -r tsconfig-paths/register src/seeder/seeder.ts"
 	},
 	"dependencies": {
+		"@faker-js/faker": "^8.0.0",
 		"@nestjs/common": "^11.1.6",
 		"@nestjs/config": "^4.0.2",
 		"@nestjs/core": "^11.1.6",
@@ -45,6 +47,7 @@
 		"helmet": "^8.1.0",
 		"multer": "^2.0.2",
 		"mysql2": "^3.14.5",
+		"nestjs-seeder": "^0.3.2",
 		"nodemailer": "^7.0.6",
 		"passport": "^0.7.0",
 		"passport-jwt": "^4.0.1",

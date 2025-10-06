@@ -1,12 +1,12 @@
-import { Column, Entity, OneToMany } from 'typeorm';
-import { Role, StatusUser } from '../type/user.type';
 import { BaseEntity } from 'src/core/database/base.entity';
 import { Cart } from 'src/modules/carts/entities/cart.entity';
-import { Oder } from 'src/modules/oders/entities/oder.entity';
-import { Inquiry } from 'src/modules/inquiries/entities/inquiry.entity';
 import { Chat } from 'src/modules/chats/entities/chat.entity';
-import { Post } from 'src/modules/posts/entities/post.entity';
 import { Comment } from 'src/modules/comments/entities/comment.entity';
+import { Inquiry } from 'src/modules/inquiries/entities/inquiry.entity';
+import { Oder } from 'src/modules/oders/entities/oder.entity';
+import { Post } from 'src/modules/posts/entities/post.entity';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
+import { Role, StatusUser } from '../type/user.type';
 @Entity('users')
 export class Auth extends BaseEntity {
 	@Column({ unique: true })
@@ -31,6 +31,14 @@ export class Auth extends BaseEntity {
 		default: StatusUser.VERIFY,
 	})
 	status: StatusUser;
+
+	@BeforeInsert()
+	@BeforeUpdate()
+	transformStatus() {
+		if (this.status && typeof this.status === 'string') {
+			this.status = this.status.toUpperCase() as StatusUser;
+		}
+	}
 
 	@OneToMany(() => Cart, (cart) => cart.user)
 	carts: Cart[];

@@ -5,7 +5,7 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PAGINATION } from 'src/util/constaint';
+import { escapedSearch, PAGINATION } from 'src/util/constaint';
 import { GenerateDataUtil } from 'src/util/generate-data.util';
 import { MESSAGE_UTIL } from 'src/util/message-data.utils';
 import { Not, Repository } from 'typeorm';
@@ -95,10 +95,10 @@ export class ProductsService {
 		}
 
 		if (keyword) {
-			const escapedKeyword = keyword.trim().replace(/[%_]/g, '\\$&');
+			const keywordSearch = escapedSearch(keyword);
 			queryBuilder.where(
 				'product.name LIKE :keyword OR product.description LIKE :keyword',
-				{ keyword: `%${escapedKeyword}%` },
+				{ keyword: `%${keywordSearch}%` },
 			);
 		}
 		queryBuilder
@@ -175,7 +175,7 @@ export class ProductsService {
 			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('category'));
 		}
 
-		if (updateProductDto.name) {
+		if (updateProductDto.name && productExists?.name !== updateProductDto?.name) {
 			const productNameExists = await this.productRepository.findOne({
 				where: {
 					name: updateProductDto.name,

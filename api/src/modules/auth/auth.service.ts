@@ -6,14 +6,14 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import * as bcrypt from 'bcrypt';
-import { TCheckEmailAndUserExistsReq } from './type/user.type';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Auth } from './entities/auth.entity';
-import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { MESSAGE_UTIL } from 'src/util/message-data.utils';
+import { Repository } from 'typeorm';
+import { CreateAuthDto } from './dto/create-auth.dto';
 import { SignInDto } from './dto/sign-in.dto';
+import { Auth } from './entities/auth.entity';
+import { TCheckEmailAndUserExistsReq } from './type/user.type';
 
 @Injectable()
 export class AuthService {
@@ -43,9 +43,10 @@ export class AuthService {
 		if (!rs) {
 			throw new BadRequestException(MESSAGE_UTIL.CREATE_FAIL('create user'));
 		}
+		const { hashedRefreshToken, password, ...userSignUp } = rs;
 		return {
 			statusCode: HttpStatus.CREATED,
-			data: rs,
+			data: userSignUp,
 			message: MESSAGE_UTIL.CREATE_SUCCESS('created user'),
 		};
 	}
@@ -61,7 +62,7 @@ export class AuthService {
 		}
 		const tokens = await this.getTokens(user.id, user.email);
 		await this.updateRefetchToken(user.id, tokens.refresh_token);
-		const { hashedRefreshToken, ...safeUser } = user;
+		const { hashedRefreshToken, password, ...safeUser } = user;
 		return {
 			statusCode: HttpStatus.OK,
 			message: MESSAGE_UTIL.LOGIN_SUCCESS,
