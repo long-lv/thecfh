@@ -11,7 +11,7 @@ import ThecfhPaginator from "@/src/components/thecfhPaginator";
 import { Box, Typography, TextField, Chip, IconButton, Tooltip } from "@mui/material";
 import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
 import { useGlobalToast } from "@/src/hooks/useGlobalToast";
-import { api } from "@/src/utils/apiUtil";
+import { api, ApiError, RefreshTokenError, NetworkError } from "@/src/utils/apiUtil";
 import dayjs from "dayjs";
 import { useEffect, useState, useCallback } from "react";
 
@@ -331,6 +331,74 @@ const Categories = () => {
     info('Kiểm tra console để xem chi tiết Bearer token!');
   };
 
+  // Test request cancellation
+  const testRequestCancellation = async () => {
+    setApiLoading(true);
+    try {
+      console.log('🧪 Testing Request Cancellation...');
+      
+      // Start a long request
+      const longRequest = api.get('https://jsonplaceholder.typicode.com/posts?_delay=5000', {
+        requestId: 'long-request'
+      });
+      
+      // Cancel after 2 seconds
+      setTimeout(() => {
+        api.cancel('long-request');
+        console.log('🚫 Request canceled after 2 seconds');
+        success('Request đã được hủy thành công!');
+        setApiLoading(false);
+      }, 2000);
+      
+      await longRequest;
+    } catch (err) {
+      if (err instanceof ApiError && err.isCanceled) {
+        console.log('✅ Request was successfully canceled');
+      } else {
+        console.error('❌ Request cancellation error:', err);
+        error('Lỗi khi hủy request!');
+      }
+      setApiLoading(false);
+    }
+  };
+
+  // Test error handling
+  const testErrorHandling = async () => {
+    setApiLoading(true);
+    try {
+      console.log('🧪 Testing Error Handling...');
+      
+      // Test different error types
+      await api.get('https://httpstat.us/404'); // 404 error
+    } catch (err) {
+      if (err instanceof ApiError) {
+        console.log('✅ Caught ApiError:', {
+          message: err.message,
+          status: err.status,
+          isNetworkError: err.isNetworkError,
+          isTimeoutError: err.isTimeoutError,
+          isCanceled: err.isCanceled
+        });
+        
+        if (err.status === 404) {
+          warning('Resource not found (404)');
+        } else if (err.isNetworkError) {
+          error('Network error occurred');
+        } else {
+          error(`API Error: ${err.message}`);
+        }
+      } else if (err instanceof RefreshTokenError) {
+        error('Session expired. Please login again.');
+      } else if (err instanceof NetworkError) {
+        error('Network connection failed');
+      } else {
+        error('Unknown error occurred');
+      }
+    } finally {
+      setApiLoading(false);
+    }
+  };
+
   // Table columns configuration
   const tableColumns = [
     {
@@ -593,6 +661,22 @@ const Categories = () => {
               onClick={testTokenCheck}
               style={{ backgroundColor: '#9c27b0', color: 'white' }}
             />
+            <ThecfhButton
+              label="Test Cancel"
+              width="120px"
+              height="40px"
+              onClick={testRequestCancellation}
+              disabled={apiLoading}
+              style={{ backgroundColor: '#ff5722', color: 'white' }}
+            />
+            <ThecfhButton
+              label="Test Errors"
+              width="120px"
+              height="40px"
+              onClick={testErrorHandling}
+              disabled={apiLoading}
+              style={{ backgroundColor: '#795548', color: 'white' }}
+            />
           </Box>
           
           {apiLoading && (
@@ -630,6 +714,9 @@ const Categories = () => {
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
               🔐 Bearer token sẽ được tự động thêm vào mọi request - Xem console logs để kiểm tra
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              🚫 Request cancellation, error handling, và token refresh đã được implement
             </Typography>
           </Box>
         </Box>
