@@ -17,7 +17,7 @@ export class CreateProductDto {
 	@IsNotEmpty({ message: 'Description is not empty' })
 	@MinLength(3, { message: 'Description is not than 3 char!' })
 	@MaxLength(999999999, { message: 'Description is most than to!' })
-	@Transform(({value}) => value.trim())
+	@Transform(({ value }) => value.trim())
 	description: string;
 
 	@ApiProperty({

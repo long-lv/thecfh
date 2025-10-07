@@ -2,17 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductAttributeValuesService } from './product-attribute-values.service';
 
 describe('ProductAttributeValuesService', () => {
-  let service: ProductAttributeValuesService;
+	let service: ProductAttributeValuesService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [ProductAttributeValuesService],
-    }).compile();
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			providers: [ProductAttributeValuesService],
+		}).compile();
 
-    service = module.get<ProductAttributeValuesService>(ProductAttributeValuesService);
-  });
+		service = module.get<ProductAttributeValuesService>(
+			ProductAttributeValuesService,
+		);
+	});
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+	it('should be defined', () => {
+		expect(service).toBeDefined();
+	});
 });

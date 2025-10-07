@@ -3,18 +3,20 @@ import { ProductVariantsValueController } from './product-variants-value.control
 import { ProductVariantsValueService } from './product-variants-value.service';
 
 describe('ProductVariantsValueController', () => {
-  let controller: ProductVariantsValueController;
+	let controller: ProductVariantsValueController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [ProductVariantsValueController],
-      providers: [ProductVariantsValueService],
-    }).compile();
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			controllers: [ProductVariantsValueController],
+			providers: [ProductVariantsValueService],
+		}).compile();
 
-    controller = module.get<ProductVariantsValueController>(ProductVariantsValueController);
-  });
+		controller = module.get<ProductVariantsValueController>(
+			ProductVariantsValueController,
+		);
+	});
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+	it('should be defined', () => {
+		expect(controller).toBeDefined();
+	});
 });

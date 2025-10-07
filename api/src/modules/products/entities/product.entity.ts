@@ -27,7 +27,9 @@ export class Product extends BaseEntity {
 	@JoinColumn({ name: 'categoryId' })
 	category: Category;
 
-	@OneToMany(() => ProductAttribute, (productAttr) => productAttr.productId)
+	@OneToMany(() => ProductAttribute, (productAttr) => productAttr.productId, {
+		cascade: true, //save product is saved, product attribute will also be saved
+	})
 	productAttrs: ProductAttribute[];
 
 	@OneToMany(() => ProductVariant, (productVariant) => productVariant.productId)

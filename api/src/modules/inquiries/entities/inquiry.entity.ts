@@ -1,4 +1,3 @@
-
 import { BaseEntity } from 'src/core/database/base.entity';
 import { Auth } from 'src/modules/auth/entities/auth.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';

@@ -30,9 +30,7 @@ export class AuthService {
 		});
 
 		if (checkUserExists) {
-			throw new BadRequestException(
-				MESSAGE_UTIL.ALREADY_EXISTS('email or name'),
-			);
+			throw new BadRequestException(MESSAGE_UTIL.ALREADY_EXISTS('email or name'));
 		}
 		const hashPw = await bcrypt.hash(createUser.password, 10);
 		const userCreated = this.userRepository.create({

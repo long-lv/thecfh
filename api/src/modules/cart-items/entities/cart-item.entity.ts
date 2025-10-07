@@ -1,4 +1,3 @@
-
 import { BaseEntity } from 'src/core/database/base.entity';
 import { Cart } from 'src/modules/carts/entities/cart.entity';
 import { ProductVariant } from 'src/modules/product-variants/entities/product-variant.entity';
@@ -21,4 +20,3 @@ export class CartItem extends BaseEntity {
 	@JoinColumn({ name: 'variantId' })
 	productVariant: ProductVariant;
 }
- 

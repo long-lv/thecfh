@@ -185,9 +185,7 @@ export class ProductsService {
 			});
 
 			if (productNameExists) {
-				throw new BadRequestException(
-					MESSAGE_UTIL.ALREADY_EXISTS('product name'),
-				);
+				throw new BadRequestException(MESSAGE_UTIL.ALREADY_EXISTS('product name'));
 			}
 
 			productExists.name = updateProductDto.name;

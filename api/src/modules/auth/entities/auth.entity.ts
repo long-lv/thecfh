@@ -42,7 +42,7 @@ export class Auth extends BaseEntity {
 
 	@OneToMany(() => Cart, (cart) => cart.user)
 	carts: Cart[];
-	
+
 	@OneToMany(() => Oder, (oder) => oder.user)
 	oders: Oder[];
 
@@ -57,7 +57,7 @@ export class Auth extends BaseEntity {
 
 	@OneToMany(() => Inquiry, (inquiry) => inquiry.receiver)
 	receiverInquiries: Inquiry[];
-	
+
 	@OneToMany(() => Chat, (chat) => chat.senderId)
 	senderChats: Chat[];
 

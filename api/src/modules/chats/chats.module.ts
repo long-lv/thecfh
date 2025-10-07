@@ -3,7 +3,7 @@ import { ChatsService } from './chats.service';
 import { ChatsController } from './chats.controller';
 
 @Module({
-  controllers: [ChatsController],
-  providers: [ChatsService],
+	controllers: [ChatsController],
+	providers: [ChatsService],
 })
 export class ChatsModule {}
