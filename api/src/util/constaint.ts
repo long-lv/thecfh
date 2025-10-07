@@ -15,7 +15,6 @@ export const PAGINATION = {
 
 export type SortOrder = 'ASC' | 'DESC';
 
-
 /**
  * Escapes special SQL wildcard characters (`%` and `_`) in a search keyword.
  *
@@ -31,4 +30,4 @@ export type SortOrder = 'ASC' | 'DESC';
  */
 export const escapedSearch = (keyword: string) => {
 	return keyword.trim().replace(/[%_]/g, '\\$&');
-}
+};

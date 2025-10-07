@@ -30,7 +30,7 @@ export default tseslint.config(
 			'@typescript-eslint/no-floating-promises': 'warn',
 			'@typescript-eslint/no-unsafe-argument': 'warn',
 
-			indent: ['error', 'tab', { SwitchCase: 1 }],
+			indent: 'off',
 
 			'prettier/prettier': [
 				'error',

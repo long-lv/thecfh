@@ -6,8 +6,7 @@ import { SignInDto } from './dto/sign-in.dto';
 
 @Controller('auth')
 export class AuthController {
-	constructor(
-		private readonly authService: AuthService) {}
+	constructor(private readonly authService: AuthService) {}
 	@ApiResponse({
 		status: 201,
 		description: 'This action created created user successfully!',
@@ -24,11 +23,10 @@ export class AuthController {
 						status: { type: 'string', example: 'active' },
 						createdAt: { type: 'string', example: '2021-01-01' },
 						updatedAt: { type: 'string', example: '2021-01-01' },
-					}
-				}
-			}
-		}
-
+					},
+				},
+			},
+		},
 	})
 	@Post('signup')
 	signUp(@Body() createUser: CreateAuthDto) {
@@ -44,29 +42,61 @@ export class AuthController {
 					type: 'object',
 					properties: {
 						id: { type: 'number', example: 1, description: 'Id of user' },
-						email: { type: 'string', example: 'example@gmail.com', description: 'Email of user' },
-						name: { type: 'string', example: 'John Doe', description: 'Name of user' },
+						email: {
+							type: 'string',
+							example: 'example@gmail.com',
+							description: 'Email of user',
+						},
+						name: {
+							type: 'string',
+							example: 'John Doe',
+							description: 'Name of user',
+						},
 						role: { type: 'string', example: 'ADMIN', description: 'Role of user' },
-						status: { type: 'string', example: 'active', description: 'Status of user' },
-						createdAt: { type: 'string', example: '2021-01-01', description: 'Created at of user' },
-						updatedAt: { type: 'string', example: '2021-01-01', description: 'Updated at of user' },
+						status: {
+							type: 'string',
+							example: 'active',
+							description: 'Status of user',
+						},
+						createdAt: {
+							type: 'string',
+							example: '2021-01-01',
+							description: 'Created at of user',
+						},
+						updatedAt: {
+							type: 'string',
+							example: '2021-01-01',
+							description: 'Updated at of user',
+						},
 						tokens: {
 							type: 'object',
 							properties: {
-								access_token: { type: 'string', example: 'access_token', description: 'Access token of user' },
-								refresh_token: { type: 'string', example: 'refresh_token', description: 'Refresh token of user' },
-							}
-						}
-					}
-				}
-			}
-		}
+								access_token: {
+									type: 'string',
+									example: 'access_token',
+									description: 'Access token of user',
+								},
+								refresh_token: {
+									type: 'string',
+									example: 'refresh_token',
+									description: 'Refresh token of user',
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	})
 	@Post('signin')
 	signIn(@Body() infoSignIn: SignInDto) {
 		return this.authService.signIn(infoSignIn);
 	}
-	@ApiProperty({name: 'refresh_token', description: 'Refresh token of user', type: String})
+	@ApiProperty({
+		name: 'refresh_token',
+		description: 'Refresh token of user',
+		type: String,
+	})
 	@ApiResponse({
 		status: 200,
 		description: 'This action refresh token successfully!',
@@ -76,12 +106,20 @@ export class AuthController {
 				data: {
 					type: 'object',
 					properties: {
-						access_token: { type: 'string', example: 'access_token', description: 'Access token of user' },
-						refresh_token: { type: 'string', example: 'refresh_token', description: 'Refresh token of user' },
-					}
-				}
-			}
-		}
+						access_token: {
+							type: 'string',
+							example: 'access_token',
+							description: 'Access token of user',
+						},
+						refresh_token: {
+							type: 'string',
+							example: 'refresh_token',
+							description: 'Refresh token of user',
+						},
+					},
+				},
+			},
+		},
 	})
 	@Post('refresh')
 	async refresh(@Body() dto: { refresh_token: string }) {

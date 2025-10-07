@@ -3,7 +3,7 @@ import { ProductAttributeValuesService } from './product-attribute-values.servic
 import { ProductAttributeValuesController } from './product-attribute-values.controller';
 
 @Module({
-  controllers: [ProductAttributeValuesController],
-  providers: [ProductAttributeValuesService],
+	controllers: [ProductAttributeValuesController],
+	providers: [ProductAttributeValuesService],
 })
 export class ProductAttributeValuesModule {}

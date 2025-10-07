@@ -1,4 +1,3 @@
-
 import { BaseEntity } from 'src/core/database/base.entity';
 import { CartItem } from 'src/modules/cart-items/entities/cart-item.entity';
 import { OderItem } from 'src/modules/oder-items/entities/oder-item.entity';

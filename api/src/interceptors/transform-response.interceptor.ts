@@ -53,7 +53,8 @@ export class TransformResponseInterceptor<T>
 					'message' in responseData &&
 					'data' in responseData
 				) {
-					const { message, data, statusCode } = responseData as ResponseWithMessage<T>;
+					const { message, data, statusCode } =
+						responseData as ResponseWithMessage<T>;
 					if (statusCode) {
 						response.status(statusCode);
 						return { ...baseResponse, statusCode, message, data };

@@ -4,23 +4,23 @@ import { UpdateBannerDto } from './dto/update-banner.dto';
 
 @Injectable()
 export class BannersService {
-  create(createBannerDto: CreateBannerDto) {
-    return 'This action adds a new banner';
-  }
+	create(createBannerDto: CreateBannerDto) {
+		return 'This action adds a new banner';
+	}
 
-  findAll() {
-    return `This action returns all banners`;
-  }
+	findAll() {
+		return `This action returns all banners`;
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} banner`;
-  }
+	findOne(id: number) {
+		return `This action returns a #${id} banner`;
+	}
 
-  update(id: number, updateBannerDto: UpdateBannerDto) {
-    return `This action updates a #${id} banner`;
-  }
+	update(id: number, updateBannerDto: UpdateBannerDto) {
+		return `This action updates a #${id} banner`;
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} banner`;
-  }
+	remove(id: number) {
+		return `This action removes a #${id} banner`;
+	}
 }

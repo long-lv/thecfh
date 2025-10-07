@@ -44,19 +44,20 @@ export class CategoriesService {
 		keyword,
 		order = 'createdAt-DESC',
 	}: IFindAllParams) {
-		const { size, skip, sortKey, sortValue } =
-			GenerateDataUtil.paginationFields({
-				page,
-				size: limit ?? PAGINATION.SIZE.toString(),
-				sort: order,
-			});
+		const { size, skip, sortKey, sortValue } = GenerateDataUtil.paginationFields({
+			page,
+			size: limit ?? PAGINATION.SIZE.toString(),
+			sort: order,
+		});
 
-		const query = this.categoriesRepository.createQueryBuilder('categories').select([
-			'categories.id',
-			'categories.name',
-			'categories.createdAt',
-			'categories.updatedAt'
-		]);
+		const query = this.categoriesRepository
+			.createQueryBuilder('categories')
+			.select([
+				'categories.id',
+				'categories.name',
+				'categories.createdAt',
+				'categories.updatedAt',
+			]);
 		if (keyword) {
 			const keywordSearch = escapedSearch(keyword);
 			query.where('categories.name LIKE :keyword', {
@@ -64,10 +65,7 @@ export class CategoriesService {
 			});
 		}
 
-		query.orderBy(`categories.${sortKey}`, sortValue)
-		.skip(skip)
-		.take(size);
-
+		query.orderBy(`categories.${sortKey}`, sortValue).skip(skip).take(size);
 
 		const [data, total] = await query.getManyAndCount();
 
@@ -101,46 +99,49 @@ export class CategoriesService {
 		// 1. Kiểm tra category có tồn tại hay không
 		const checkExists = await this.findOne(id);
 		if (!checkExists) {
-		  throw new NotFoundException(
-			`${MESSAGE_UTIL.NOT_FOUND(`category id = ${id}`)}`,
-		  );
-		}
-	  
-		// 2. Nếu client gửi name mới thì check xem name đó đã tồn tại chưa
-		if (updateCategoryDto.name && checkExists?.data?.name !== updateCategoryDto?.name) {
-		  const checkExistCateName = await this.categoriesRepository.findOne({
-			where: { name: updateCategoryDto?.name },
-			withDeleted: true, // kể cả category đã bị soft delete
-		  });
-	  
-		  if (checkExistCateName) {
-			throw new BadRequestException(
-			  `${MESSAGE_UTIL.ALREADY_EXISTS('category name')}`,
+			throw new NotFoundException(
+				`${MESSAGE_UTIL.NOT_FOUND(`category id = ${id}`)}`,
 			);
-		  }
 		}
-	  
+
+		// 2. Nếu client gửi name mới thì check xem name đó đã tồn tại chưa
+		if (
+			updateCategoryDto.name &&
+			checkExists?.data?.name !== updateCategoryDto?.name
+		) {
+			const checkExistCateName = await this.categoriesRepository.findOne({
+				where: { name: updateCategoryDto?.name },
+				withDeleted: true, // kể cả category đã bị soft delete
+			});
+
+			if (checkExistCateName) {
+				throw new BadRequestException(
+					`${MESSAGE_UTIL.ALREADY_EXISTS('category name')}`,
+				);
+			}
+		}
+
 		// 3. Gộp (merge) dữ liệu từ DTO vào entity hiện tại
 		//    - merge giữ nguyên instance của entity (quan trọng với TypeORM)
 		//    - chỉ copy những field có trong entity
 		//    - tiện lợi hơn là gán thủ công từng field
 		this.categoriesRepository.merge(checkExists?.data, updateCategoryDto);
-	  
+
 		// 4. Lưu lại entity đã được merge vào DB
 		const updated = await this.categoriesRepository.save(checkExists?.data);
-	  
+
 		// 5. Nếu save thất bại thì throw error
 		if (!updated) {
-		  throw new BadRequestException(MESSAGE_UTIL.UPDATE_FAIL(id, 'category'));
+			throw new BadRequestException(MESSAGE_UTIL.UPDATE_FAIL(id, 'category'));
 		}
-	  
+
 		// 6. Trả về response thành công
 		return {
-		  messagae: MESSAGE_UTIL.UPDATE_SUCCESS(id, 'category'),
-		  data: updated,
-		  statusCode: HttpStatus.OK,
+			messagae: MESSAGE_UTIL.UPDATE_SUCCESS(id, 'category'),
+			data: updated,
+			statusCode: HttpStatus.OK,
 		};
-	  }
+	}
 
 	async remove(id: string) {
 		const checkExists = await this.findOne(id);

@@ -3,7 +3,7 @@ import { BannersService } from './banners.service';
 import { BannersController } from './banners.controller';
 
 @Module({
-  controllers: [BannersController],
-  providers: [BannersService],
+	controllers: [BannersController],
+	providers: [BannersService],
 })
 export class BannersModule {}
