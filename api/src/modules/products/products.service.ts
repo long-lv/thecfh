@@ -73,7 +73,7 @@ export class ProductsService {
 	}
 
 	async findAll(query: ProductListQueryDto) {
-		let {
+		const {
 			page = PAGINATION.PAGE,
 			size = PAGINATION.SIZE,
 			keyword,
@@ -138,16 +138,15 @@ export class ProductsService {
 			},
 		});
 
-		const transformedProduct = {
-			...product,
-			categoryName: product?.category.name,
-		};
-
-		delete transformedProduct.category;
-
 		if (!product) {
 			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
 		}
+
+		const { category, ...productWithoutCategory } = product;
+		const transformedProduct = {
+			...productWithoutCategory,
+			categoryName: category.name,
+		};
 
 		return {
 			message: MESSAGE_UTIL.GET_SUCCESS('product'),
@@ -161,7 +160,7 @@ export class ProductsService {
 		files?: Express.Multer.File[],
 	) {
 		const [productExists, categoryExists] = await Promise.all([
-			await this.productRepository.findOne({
+			this.productRepository.findOne({
 				where: { id },
 			}),
 			this.categoryService.findOne(String(updateProductDto.categoryId)),

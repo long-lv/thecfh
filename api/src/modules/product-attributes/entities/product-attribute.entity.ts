@@ -9,24 +9,22 @@ export class ProductAttribute extends BaseEntity {
 	@Column()
 	productId: number;
 
-	@Column()
-	name: string;
-
 	@ManyToOne(() => Product, (product) => product.productAttrs, {
 		onDelete: 'CASCADE',
 	})
 	@JoinColumn({ name: 'productId' })
 	product: Product;
 
-	@ManyToOne(() => Product, (product) => product.productAttrs)
-	productAttrs: Product;
+	@Column()
+	attributeId: number;
+
+	@ManyToOne(() => Attribute, { eager: true })
+	@JoinColumn({ name: 'attributeId' })
+	attribute: Attribute;
 
 	@OneToMany(
 		() => ProductAttributeValue,
-		(productAttrValue) => productAttrValue.attributeId,
+		(productAttrValue) => productAttrValue.productAttr,
 	)
 	productAttrValues: ProductAttributeValue[];
-
-	@ManyToOne(() => Attribute, { eager: true })
-	attribute: Attribute;
 }
