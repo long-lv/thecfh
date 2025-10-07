@@ -1,4 +1,5 @@
 import { BaseEntity } from 'src/core/database/base.entity';
+import { Attribute } from 'src/modules/attributes/entities/attibute.entity';
 import { ProductAttributeValue } from 'src/modules/product-attribute-values/entities/product-attribute-value.entity';
 import { Product } from 'src/modules/products/entities/product.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
@@ -25,4 +26,7 @@ export class ProductAttribute extends BaseEntity {
 		(productAttrValue) => productAttrValue.attributeId,
 	)
 	productAttrValues: ProductAttributeValue[];
+
+	@ManyToOne(() => Attribute, { eager: true })
+	attribute: Attribute;
 }

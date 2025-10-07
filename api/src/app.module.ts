@@ -22,6 +22,7 @@ import { InquiriesModule } from './modules/inquiries/inquiries.module';
 import { ChatsModule } from './modules/chats/chats.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 import { UsersModule } from './modules/users/users.module';
+import { AttributesModule } from './modules/attributes/attributes.module';
 @Module({
 	imports: [
 		TypeOrmModule.forRoot(databaseConfig),
@@ -43,6 +44,7 @@ import { UsersModule } from './modules/users/users.module';
 		ChatsModule,
 		UploadsModule,
 		UsersModule,
+		AttributesModule,
 		// ConfigModule.forRoot({ isGlobal: true }),
 	],
 	controllers: [AppController],
