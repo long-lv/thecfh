@@ -1,6 +1,6 @@
 import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { CreateProductDto } from './create-product.dto';
 import { IsArray, IsOptional, IsString } from 'class-validator';
+import { CreateProductDto } from './create-product.dto';
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
 	@ApiPropertyOptional({
@@ -12,7 +12,7 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
 		description: 'List of image URLs to remove',
 	})
 	@IsOptional()
-  @IsArray()
-  @IsString({ each: true })
+	@IsArray()
+	@IsString({ each: true })
 	fileRemove?: string[];
 }
