@@ -1,15 +1,15 @@
 import {
-	Controller,
-	Get,
-	Post,
 	Body,
-	Param,
+	Controller,
 	Delete,
+	Get,
+	Param,
+	Post,
 	Put,
 } from '@nestjs/common';
-import { ProductAttributesService } from './product-attributes.service';
 import { CreateProductAttributeDto } from './dto/create-product-attribute.dto';
 import { UpdateProductAttributeDto } from './dto/update-product-attribute.dto';
+import { ProductAttributesService } from './product-attributes.service';
 
 @Controller('product-attributes')
 export class ProductAttributesController {
@@ -24,7 +24,7 @@ export class ProductAttributesController {
 
 	@Get(':productId')
 	findOne(@Param('productId') productId: string) {
-		return this.productAttributesService.findOne(productId);
+		return this.productAttributesService.findByProductId(productId);
 	}
 
 	@Put('update/:id')

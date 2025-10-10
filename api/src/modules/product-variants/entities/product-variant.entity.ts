@@ -15,11 +15,14 @@ export class ProductVariant extends BaseEntity {
 	@Column()
 	stock: number;
 
+	@Column()
+	productId: number;
+
 	@ManyToOne(() => Product, (product) => product.productVariants, {
 		onDelete: 'CASCADE',
 	})
 	@JoinColumn({ name: 'productId' })
-	productId: Product;
+	product: Product;
 
 	@OneToMany(
 		() => ProductVariantsValue,

@@ -1,11 +1,11 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { AttributeValue } from './entities/attribute-value.entity';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MESSAGE_UTIL } from 'src/util/message-data.utils';
+import { Repository } from 'typeorm';
 import { AttributesService } from '../attributes/attributes.service';
 import { CreateAttributeValueDto } from './dto/create-attribute-value.dto';
-import { MESSAGE_UTIL } from 'src/util/message-data.utils';
 import { UpdateAttributeValueDto } from './dto/update-attriubte-value.dto';
+import { AttributeValue } from './entities/attribute-value.entity';
 
 @Injectable()
 export class AttributeValueService {
@@ -56,7 +56,7 @@ export class AttributeValueService {
 		});
 
 		if (!attributeValue) {
-			throw new BadRequestException(MESSAGE_UTIL.NOT_FOUND('attribute value'));
+			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('attribute value'));
 		}
 
 		return {
@@ -98,7 +98,7 @@ export class AttributeValueService {
 
 		return {
 			message: MESSAGE_UTIL.UPDATE_SUCCESS(id, 'attribute value'),
-			data: attributeValue,
+			data: attributeValue.data,
 		};
 	}
 }

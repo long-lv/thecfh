@@ -708,6 +708,198 @@ cascade: true
 - [E-commerce Product Variants Pattern](https://www.shopify.com/partners/blog/product-variants)
 - [Database Design for Product Attributes](https://stackoverflow.com/questions/tagged/product-attributes)
 
+
+1. Product
+(1.1) Tạo Product
+
+POST /products
+
+Request
+
+{
+  "name": "Áo thun A",
+  "description": "Áo cotton 100%",
+  "price": 200000,
+  "imgUrl": "https://example.com/image.jpg",
+  "categoryId": 1
+}
+
+
+Response
+
+{
+  "id": 1,
+  "name": "Áo thun A",
+  "description": "Áo cotton 100%",
+  "price": 200000,
+  "imgUrl": "https://example.com/image.jpg",
+  "categoryId": 1,
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+
+(1.2) Lấy Product đầy đủ (GET /products/:id)
+
+Response
+
+{
+  "id": 1,
+  "name": "Áo thun A",
+  "description": "Áo cotton 100%",
+  "price": 200000,
+  "imgUrl": "https://example.com/image.jpg",
+  "category": { "id": 1, "name": "Thời trang" },
+  "attributes": [
+    {
+      "id": 10,
+      "attributeId": 1,
+      "name": "size",
+      "values": [
+        { "id": 100, "value": "S", "attributeValueId": 1 },
+        { "id": 101, "value": "M", "attributeValueId": 2 }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "id": 101,
+      "sku": "TSHIRT-A-S-BLUE",
+      "price": 150000,
+      "stock": 10,
+      "values": [
+        { "attribute": "size", "value": "S", "attributeValueId": 1 },
+        { "attribute": "color", "value": "Blue", "attributeValueId": 5 }
+      ]
+    }
+  ]
+}
+
+2. Product Attribute
+(2.1) Gắn thuộc tính vào product
+
+POST /product-attributes
+
+Request
+
+{
+  "productId": 1,
+  "attributeId": 1    // ví dụ "size"
+}
+
+
+Response
+
+{
+  "id": 10,
+  "productId": 1,
+  "attributeId": 1
+}
+
+(2.2) Thêm giá trị cho product attribute
+
+POST /product-attribute-values/bulk
+
+Request
+
+{
+  "productAttributeId": 10,
+  "values": [1, 2, 3]   // attributeValueId = S, M, L
+}
+
+
+Response
+
+[
+  { "id": 100, "productAttributeId": 10, "attributeValueId": 1 },
+  { "id": 101, "productAttributeId": 10, "attributeValueId": 2 },
+  { "id": 102, "productAttributeId": 10, "attributeValueId": 3 }
+]
+
+3. Product Variant
+(3.1) Tạo một variant (SKU cụ thể)
+
+POST /product-variants
+
+Request
+
+{
+  "productId": 1,
+  "sku": "TSHIRT-A-S-BLUE",
+  "price": 150000,
+  "stock": 10
+}
+
+
+Response
+
+{
+  "id": 101,
+  "productId": 1,
+  "sku": "TSHIRT-A-S-BLUE",
+  "price": 150000,
+  "stock": 10,
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+
+(3.2) Gắn variant với attributeValues
+
+POST /product-variants-value/bulk
+
+Request
+
+{
+  "variantId": 101,
+  "values": [1, 5]   // Size S, Color Blue
+}
+
+
+Response
+
+[
+  { "id": 201, "variantId": 101, "productAttributeValueId": 1 },
+  { "id": 202, "variantId": 101, "productAttributeValueId": 5 }
+]
+
+4. API hỗ trợ FE tìm variant theo lựa chọn (optional)
+
+POST /product-variants/find
+
+Request
+
+{
+  "productId": 1,
+  "values": [1, 5]   // attributeValueId = Size S, Color Blue
+}
+
+
+Response
+
+{
+  "id": 101,
+  "sku": "TSHIRT-A-S-BLUE",
+  "price": 150000,
+  "stock": 10,
+  "values": [
+    { "attribute": "size", "value": "S", "attributeValueId": 1 },
+    { "attribute": "color", "value": "Blue", "attributeValueId": 5 }
+  ]
+}
+
+✅ Tổng kết
+
+Product API: tạo, lấy thông tin sản phẩm.
+
+ProductAttribute API: gắn thuộc tính (size, color) cho product.
+
+ProductAttributeValue API: gắn giá trị (S, M, Red, Blue).
+
+ProductVariant API: tạo SKU cụ thể (giá, stock).
+
+ProductVariantsValue API: mapping SKU với các giá trị thuộc tính.
+
+Optional: API tìm variant theo tổ hợp attributeValueId để FE dễ gọi.
+
 ---
 
 **Tác giả:** LeLong  

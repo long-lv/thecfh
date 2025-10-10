@@ -1,13 +1,13 @@
-import { ProductsService } from './../products/products.service';
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { ProductsService } from './../products/products.service';
 import { CreateProductAttributeDto } from './dto/create-product-attribute.dto';
 // import { UpdateProductAttributeDto } from './dto/update-product-attribute.dto';
-import { ProductAttribute } from './entities/product-attribute.entity';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MESSAGE_UTIL } from 'src/util/message-data.utils';
+import { Repository } from 'typeorm';
 import { AttributesService } from '../attributes/attributes.service';
 import { UpdateProductAttributeDto } from './dto/update-product-attribute.dto';
+import { ProductAttribute } from './entities/product-attribute.entity';
 
 @Injectable()
 export class ProductAttributesService {
@@ -45,7 +45,23 @@ export class ProductAttributesService {
 		return `This action returns all productAttributes`;
 	}
 
-	async findOne(productId: string) {
+	async findById(id: string) {
+		const exist = await this.productAttributeRepository.findOne({
+			where: { id },
+		});
+
+		if (!exist) {
+			throw new BadRequestException(MESSAGE_UTIL.NOT_FOUND('product attribute'));
+		}
+
+		return {
+			data: exist,
+			message: MESSAGE_UTIL.GET_SUCCESS('product attribute'),
+			statusCode: HttpStatus.OK,
+		};
+	}
+
+	async findByProductId(productId: string) {
 		const productAttributes = await this.productAttributeRepository.find({
 			where: { productId: Number(productId) },
 			relations: ['attribute'],

@@ -119,33 +119,53 @@ export class ProductsService {
 	}
 
 	async findOne(id: string) {
-		const product = await this.productRepository.findOne({
-			where: { id },
-			relations: ['category'], // name relation in entity
-			select: {
-				id: true,
-				name: true,
-				description: true,
-				price: true,
-				imgUrl: true,
-				categoryId: true,
-				createdAt: true,
-				updatedAt: true,
-				category: {
-					id: true,
-					name: true,
-				},
-			},
-		});
+		// const product = await this.productRepository.findOne({
+		// 	where: { id },
+		// 	relations: [
+		// 		'category',
+		// 		'productAttrs',
+		// 		'productAttrs.attribute',
+		// 		'productAttrs.productAttrValues',
+		// 		'productAttrs.productAttrValues.attributeValue',
+		// 	],
+		// });
+
+		const product = await this.productRepository
+			.createQueryBuilder('product')
+			.leftJoinAndSelect('product.category', 'category') // dùng đúng tên quan hệ
+			.leftJoinAndSelect('product.productAttrs', 'productAttrs')
+			.leftJoinAndSelect('productAttrs.attribute', 'attribute')
+			.leftJoinAndSelect('productAttrs.productAttrValues', 'productAttrValues')
+			.leftJoinAndSelect('productAttrValues.attributeValue', 'attributeValue')
+			.where('product.id = :id', { id })
+			.getOne();
 
 		if (!product) {
-			throw new NotFoundException(MESSAGE_UTIL.NOT_FOUND('product'));
+			throw new BadRequestException(MESSAGE_UTIL.NOT_FOUND('product'));
 		}
+		const attributes = product.productAttrs?.map((productAttr) => ({
+			id: productAttr.id,
+			attributeId: productAttr.attributeId,
+			name: productAttr.attribute?.name,
+			values:
+				productAttr.productAttrValues?.map((pav) => ({
+					id: pav.id,
+					value: pav.attributeValue?.value,
+					attributeValueId: pav.attributeValueId,
+				})) || [],
+		}));
 
-		const { category, ...productWithoutCategory } = product;
 		const transformedProduct = {
-			...productWithoutCategory,
-			categoryName: category.name,
+			id: product.id,
+			name: product.name,
+			description: product.description,
+			price: product.price,
+			imgUrl: product.imgUrl,
+			categoryId: product.categoryId,
+			category: product.category,
+			attributes: attributes || [],
+			createdAt: product.createdAt,
+			updatedAt: product.updatedAt,
 		};
 
 		return {

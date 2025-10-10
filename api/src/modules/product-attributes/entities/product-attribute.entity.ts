@@ -18,7 +18,7 @@ export class ProductAttribute extends BaseEntity {
 	@Column()
 	attributeId: number;
 
-	@ManyToOne(() => Attribute, { eager: true })
+	@ManyToOne(() => Attribute)
 	@JoinColumn({ name: 'attributeId' })
 	attribute: Attribute;
 

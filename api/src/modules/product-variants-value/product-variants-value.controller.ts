@@ -22,29 +22,29 @@ export class ProductVariantsValueController {
 		return this.productVariantsValueService.create(createProductVariantsValueDto);
 	}
 
-	@Get()
-	findAll() {
-		return this.productVariantsValueService.findAll();
-	}
+	// @Get()
+	// findAll() {
+	// 	return this.productVariantsValueService.findAll();
+	// }
 
-	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.productVariantsValueService.findOne(+id);
-	}
+	// @Get(':id')
+	// findOne(@Param('id') id: string) {
+	// 	return this.productVariantsValueService.findOne(+id);
+	// }
 
-	@Patch(':id')
-	update(
-		@Param('id') id: string,
-		@Body() updateProductVariantsValueDto: UpdateProductVariantsValueDto,
-	) {
-		return this.productVariantsValueService.update(
-			+id,
-			updateProductVariantsValueDto,
-		);
-	}
+	// @Patch(':id')
+	// update(
+	// 	@Param('id') id: string,
+	// 	@Body() updateProductVariantsValueDto: UpdateProductVariantsValueDto,
+	// ) {
+	// 	return this.productVariantsValueService.update(
+	// 		+id,
+	// 		updateProductVariantsValueDto,
+	// 	);
+	// }
 
 	@Delete(':id')
 	remove(@Param('id') id: string) {
-		return this.productVariantsValueService.remove(+id);
+		return this.productVariantsValueService.remove(id);
 	}
 }

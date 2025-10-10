@@ -1,10 +1,16 @@
 import { BaseEntity } from 'src/core/database/base.entity';
 import { ProductAttributeValue } from 'src/modules/product-attribute-values/entities/product-attribute-value.entity';
 import { ProductVariant } from 'src/modules/product-variants/entities/product-variant.entity';
-import { Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('productVariantsValues')
 export class ProductVariantsValue extends BaseEntity {
+	@Column()
+	variantId: number;
+
+	@Column()
+	attributeValueId: number;
+
 	@ManyToOne(
 		() => ProductVariant,
 		(productVariant) => productVariant.productVariantValues,
@@ -12,9 +18,8 @@ export class ProductVariantsValue extends BaseEntity {
 			onDelete: 'CASCADE',
 		},
 	)
-	@JoinColumn({ name: 'vaariantId' })
+	@JoinColumn({ name: 'variantId' })
 	productVariant: ProductVariant;
-
 	@ManyToOne(
 		() => ProductAttributeValue,
 		(productAttrVal) => productAttrVal.variantValues,
@@ -22,6 +27,6 @@ export class ProductVariantsValue extends BaseEntity {
 			onDelete: 'CASCADE',
 		},
 	)
-	@JoinColumn({ name: 'attributValueId' })
+	@JoinColumn({ name: 'attributeValueId' })
 	productAttrValue: ProductAttributeValue;
 }
