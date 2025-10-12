@@ -14,6 +14,8 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { Auth } from './entities/auth.entity';
 import { TCheckEmailAndUserExistsReq } from './type/user.type';
+import { sanitizeUser } from 'src/util/constaint';
+import { ENV } from 'src/config/env.config';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +43,7 @@ export class AuthService {
 		if (!rs) {
 			throw new BadRequestException(MESSAGE_UTIL.CREATE_FAIL('create user'));
 		}
-		const { hashedRefreshToken, password, ...userSignUp } = rs;
+		const userSignUp = sanitizeUser(rs);
 		return {
 			statusCode: HttpStatus.CREATED,
 			data: userSignUp,
@@ -60,7 +62,7 @@ export class AuthService {
 		}
 		const tokens = await this.getTokens(user.id, user.email);
 		await this.updateRefetchToken(user.id, tokens.refresh_token);
-		const { hashedRefreshToken, password, ...safeUser } = user;
+		const safeUser = sanitizeUser(user);
 		return {
 			statusCode: HttpStatus.OK,
 			message: MESSAGE_UTIL.LOGIN_SUCCESS,
@@ -137,5 +139,20 @@ export class AuthService {
 		} else {
 			return true;
 		}
+	}
+
+	getRefreshTokenCookieOptions() {
+		const isProduction = ENV.NODE_ENV === 'production';
+		return {
+			httpOnly: true, // JavaScript không thể đọc cookie
+			// Development: secure = false (HTTP OK)
+			// Production: secure = true (chỉ HTTPS)
+			secure: isProduction,
+			// Development: 'lax' - Cho phép cross-origin (localhost:3000 → localhost:5000)
+			// Production: 'strict' - Chỉ same-origin (an toàn hơn)
+			sameSite: isProduction ? ('strict' as const) : ('lax' as const),
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
+			path: '/', // Cookie available toàn bộ routes
+		};
 	}
 }
