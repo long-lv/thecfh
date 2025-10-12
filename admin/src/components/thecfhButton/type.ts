@@ -3,7 +3,9 @@ export interface IPropsThecfhButton {
     width?: string;
     height?: string;
     className?: string;
+    classNameLabel?: string;
     style?: React.CSSProperties;
+    styleLabel?: React.CSSProperties;
     disabled?: boolean;
     onClick?: () => void;
 }

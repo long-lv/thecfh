@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LoadingProvider } from "../contexts/LoadingContext";
 import { ToastProvider } from "../contexts/ToastContext";
+import ReactQueryProvider from "../providers/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,11 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased" suppressHydrationWarning={true}>
-        <LoadingProvider>
-          <ToastProvider>
-            {children}
-          </ToastProvider>
-        </LoadingProvider>
+        <ReactQueryProvider>
+          <LoadingProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </LoadingProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

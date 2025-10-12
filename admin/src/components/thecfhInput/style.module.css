@@ -1,3 +1,21 @@
 .inputContainer {
-    width: 100%;
+  width: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+.inputContainer img {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+}
+
+/* Input khi có icon password - cần padding-right để text không đè lên icon */
+.inputContainer:has(img) input {
+  padding-right: 40px; /* 12px (khoảng cách rìa) + 20px (icon width) + 8px (space) */
 }
