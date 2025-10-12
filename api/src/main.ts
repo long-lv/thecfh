@@ -3,16 +3,26 @@ import { AppModule } from './app.module';
 import { appConfig } from './config/app.config';
 import { setupSwagger } from './config/swagger.config';
 import * as dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import { HttpErrorFilter } from './core/filter/httpError.filter';
 import { TransformResponseInterceptor } from './interceptors/transform-response.interceptor';
 import { ValidationPipe } from '@nestjs/common';
+import { ENV } from './config/env.config';
 // config env;
 dotenv.config();
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
+	// add cookieParser first because it is need to use in other middleware
+	app.use(cookieParser());
+
 	if (appConfig.cors) {
-		app.enableCors();
+		app.enableCors({
+			origin: ENV.FRONTEND_URL, // Frontend URL (admin app)
+			credentials: true, // ⭐ CHO PHÉP gửi/nhận cookies
+			methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+			allowedHeaders: ['Content-Type', 'Authorization'],
+		});
 	}
 
 	// setting filter http request

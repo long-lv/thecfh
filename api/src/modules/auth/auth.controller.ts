@@ -1,8 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Post,
+	Req,
+	Res,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { SignInDto } from './dto/sign-in.dto';
+import type { Request, Response } from 'express';
+import { MESSAGE_UTIL } from 'src/util/message-data.utils';
 
 @Controller('auth')
 export class AuthController {
@@ -89,8 +98,28 @@ export class AuthController {
 		},
 	})
 	@Post('signin')
-	signIn(@Body() infoSignIn: SignInDto) {
-		return this.authService.signIn(infoSignIn);
+	async signIn(
+		@Body() infoSignIn: SignInDto,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const result = await this.authService.signIn(infoSignIn);
+		// Set httpOnly cookie
+		res.cookie(
+			'refreshToken',
+			result.data.tokens.refresh_token,
+			this.authService.getRefreshTokenCookieOptions(),
+		);
+
+		const { refresh_token, ...tokensWithoutRefresh } = result.data.tokens;
+
+		return {
+			statusCode: result.statusCode,
+			message: result.message,
+			data: {
+				...result.data,
+				tokens: tokensWithoutRefresh,
+			},
+		};
 	}
 	@ApiProperty({
 		name: 'refresh_token',
@@ -122,7 +151,35 @@ export class AuthController {
 		},
 	})
 	@Post('refresh')
-	async refresh(@Body() dto: { refresh_token: string }) {
-		return this.authService.refreshToken(dto.refresh_token);
+	async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+		const refreshToken = req.cookies['refreshToken'] as string;
+		if (!refreshToken) {
+			throw new UnauthorizedException(MESSAGE_UTIL.UNTHORIZED);
+		}
+		// get new tokens
+		const tokens = await this.authService.refreshToken(refreshToken);
+
+		// set new httpOnly cookie
+		res.cookie(
+			'refreshToken',
+			tokens.refresh_token,
+			this.authService.getRefreshTokenCookieOptions(),
+		);
+		return {
+			statusCode: 200,
+			data: {
+				access_token: tokens.access_token,
+			},
+		};
+	}
+
+	@Post('logout')
+	logout(@Res({ passthrough: true }) res: Response) {
+		res.clearCookie('refreshToken');
+
+		return {
+			statusCode: 200,
+			message: 'Logged out successfully',
+		};
 	}
 }

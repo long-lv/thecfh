@@ -1,3 +1,5 @@
+import { Auth } from 'src/modules/auth/entities/auth.entity';
+
 export const SORT_BY = {
 	DESC: 'DESC' as const,
 	ASC: 'ASC' as const,
@@ -30,4 +32,9 @@ export type SortOrder = 'ASC' | 'DESC';
  */
 export const escapedSearch = (keyword: string) => {
 	return keyword.trim().replace(/[%_]/g, '\\$&');
+};
+
+export const sanitizeUser = (user: Auth) => {
+	const { hashedRefreshToken, password, ...safeUser } = user;
+	return safeUser;
 };

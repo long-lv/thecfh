@@ -13,4 +13,5 @@ export const MESSAGE_UTIL = {
 	UPLOAD_FAIL: 'Upload file failed!',
 	LOGIN_SUCCESS: 'Login successfully',
 	LOGIN_FAIL: 'Email or password wrong!, please again',
+	UNTHORIZED: 'Unauthorized, please login again',
 };
