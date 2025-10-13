@@ -17,6 +17,7 @@ const ThecfhInput = (props: IPropsThecfhInput) => {
     disabled,
     width,
     error,
+		onBlur,
     onChange,
     onKeyDown,
     onKeyUp,
@@ -37,6 +38,7 @@ const ThecfhInput = (props: IPropsThecfhInput) => {
                 text-[var(--color-text-1)]
                 leading-[var(--line-height-100-percent)]
                 gap-2 flex 
+								${error ? 'border-red-500' : 'border-[var(--color-gray-border)]'}
                 ${classNameInput || ""}
               `}
           style={{
@@ -50,6 +52,7 @@ const ThecfhInput = (props: IPropsThecfhInput) => {
           onChange={(e) => onChange?.(e.target.value)}
           onKeyDown={(e) => onKeyDown?.(e)}
           onKeyUp={(e) => onKeyUp?.(e)}
+					onBlur={onBlur}
         />
         {changePasswordIcon && (
           <Image

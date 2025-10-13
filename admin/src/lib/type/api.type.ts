@@ -1,0 +1,11 @@
+export interface ApiErrorResponse {
+  message: string;
+  statusCode: number;
+  error?: string;
+}
+
+// Generic success response
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
+}

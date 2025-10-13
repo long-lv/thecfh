@@ -12,5 +12,6 @@ export interface IPropsThecfhInput {
     onChange?: (value: string) => void;
     onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
     onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+		onBlur? : (event: React.FocusEvent<HTMLInputElement>) => void;
     changePasswordIcon?: () => void;
 }

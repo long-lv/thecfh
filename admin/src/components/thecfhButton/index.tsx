@@ -5,7 +5,7 @@ const ThecfhButton = (props: IPropsThecfhButton) => {
   return (
     <button
       className={`${className || ""} 
-        cursor-pointer
+        ${disabled ? "opacity-50 hover:brightness-100" : "hover:brightness-95 cursor-pointer"}
         border
         border-[var(--color-gray-border-200)]
       `}
