@@ -77,4 +77,7 @@ export const routesConstain = {
   comments: {
     path: `${API_PREFIX}/comments`,
   },
+  login: {
+    path: `/login`,
+  },
 };

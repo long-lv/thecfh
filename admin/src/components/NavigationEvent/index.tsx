@@ -11,7 +11,7 @@ export function NavigationEvents() {
   useEffect(() => {
     const timer = setTimeout(() => {
       hideLoading();
-    }, 50000);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, [pathname, hideLoading]);
