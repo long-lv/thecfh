@@ -1,12 +1,11 @@
 import { IPropsThecfhButton } from "./type";
 
 const ThecfhButton = (props: IPropsThecfhButton) => {
-  const { label, width, height, className, style, disabled, onClick } = props;
+  const { label, width, height, className, style, disabled, classNameLabel, styleLabel, onClick } = props;
   return (
     <button
       className={`${className || ""} 
-        cursor-pointer
-        rounded-md 
+        ${disabled ? "opacity-50 hover:brightness-100" : "hover:brightness-95 cursor-pointer"}
         border
         border-[var(--color-gray-border-200)]
       `}
@@ -14,7 +13,7 @@ const ThecfhButton = (props: IPropsThecfhButton) => {
       disabled={disabled}
       onClick={onClick}
     >
-      <span>{label}</span>
+      <span className={classNameLabel || ""} style={styleLabel || {}}>{label}</span>
     </button>
   );
 };
