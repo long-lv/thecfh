@@ -12,6 +12,7 @@ import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
 import { useRouter } from "next/navigation";
 import { AxiosError, HttpStatusCode } from "axios";
 import { ApiErrorResponse } from "@/src/lib/type/api.type";
+import { routesConstain } from "@/src/routes";
 export default function LoginPage() {
 	/** [State] form control */
   const {
@@ -41,7 +42,7 @@ export default function LoginPage() {
     mutate(data, {
 			onSuccess: () => {
 				toast.success('login success')
-				router.push('thecfh/categories')
+				router.push(routesConstain.dashboards.path)
 			},
 			onError: (error: AxiosError<ApiErrorResponse>) => {
 				if (error.response?.status === HttpStatusCode.Unauthorized) { // đây là status của request, còn status do api trả ra phải trọc vòa response.data

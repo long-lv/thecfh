@@ -6,12 +6,12 @@ export interface ILoginRequest {
 } 
 
 export interface ILoginResponse {
-	data: IUser;
+	data: IUserResponse;
 	message: string;
 	statusCode: number;
 }
 
-export interface IUser {
+export interface IUserResponse {
 	id: number;
 	email: string;
 	name: string;
