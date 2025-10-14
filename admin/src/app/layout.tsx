@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import { LoadingProvider } from "../contexts/LoadingContext";
 import { ToastProvider } from "../contexts/ToastContext";
 import ReactQueryProvider from "../providers/ReactQueryProvider";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +19,9 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning={true}>
         <ReactQueryProvider>
           <LoadingProvider>
-            <ToastProvider>{children}</ToastProvider>
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </LoadingProvider>
         </ReactQueryProvider>
       </body>
