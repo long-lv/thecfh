@@ -1,5 +1,6 @@
 "use client";
 
+import ThecfhButton from "@/src/components/thecfhButton";
 import ThecfhPaginator from "@/src/components/thecfhPaginator";
 import ThecfhTable from "@/src/components/thecfhTable";
 import {
@@ -60,6 +61,31 @@ export default function Categories() {
     }));
   };
 
+	const handleClickEdit = (id: number) => {
+		console.log(id, 'id edit');
+	} 
+
+	const handleClickDelete = (id: number) => {
+		console.log(id, 'id delete');
+	}
+
+	const columsFomat = [
+		...columns,
+		{
+			id: 'action',
+			label: 'action',
+			format: (_, row?: ICategories) => {
+				if (!row) return null;
+				return (
+					<div className="flex gap-1">
+						<ThecfhButton label="Edit" onClick={() => handleClickEdit(row.id)}></ThecfhButton>
+						<ThecfhButton label="Delete" onClick={() => handleClickDelete(row.id)}></ThecfhButton>
+					</div>
+				);
+			}
+		}
+	]
+
   useEffect(() => {
     if (data?.data) {
       setDataCategories(data.data);
@@ -90,7 +116,7 @@ export default function Categories() {
   return (
     <div className="container">
       <ThecfhTable
-        columns={columns}
+        columns={columsFomat}
         data={dataCategories}
         loading={isLoading}
         isError={isError}
