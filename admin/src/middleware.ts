@@ -18,8 +18,7 @@ export function middleware(request: NextRequest) {
 
 	// If ALREADY logged in + accessing the login page → redirect to dashboard
 	if (accessToken && isPublicRoute) {
-		const dashboardRoute = routesConstain.find(route => route.name === "dashboard");
-		const dashboardUrl = new URL(dashboardRoute?.path ?? '/thecfh/dashboards', request.url);
+		const dashboardUrl = new URL(routesConstain?.dashboards.path, request.url);
 		return NextResponse.redirect(dashboardUrl);
 	}
 

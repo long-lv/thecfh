@@ -39,11 +39,11 @@ export default function NavMenu() {
   };
 
   const handleLogout = () => {
+		router.push(routesConstain.login.path)
     loading.showLoading()
     logout(undefined, {
       onSettled: () => {
         toast.success('Logout success')
-        router.push(routesConstain.login.path)
       }
     });
   };
