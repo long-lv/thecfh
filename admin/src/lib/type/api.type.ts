@@ -9,3 +9,10 @@ export interface ApiResponse<T> {
   data: T;
   message?: string;
 }
+
+export interface IPaginatorResponse {
+	total: number | null,
+	size: number,
+	page: string | number,
+	totalPage: number | null,
+}
