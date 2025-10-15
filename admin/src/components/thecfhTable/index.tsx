@@ -153,10 +153,9 @@ const ThecfhTable = <T extends Record<string, any> = any>(
               colSpan={columns.length + (selectable ? 1 : 0)}
               className={styles.loadingState}
             >
-              <div className={styles.loadingSpinner}></div>
-              <Typography variant="body2" sx={{ mt: 2 }}>
-                Đang tải dữ liệu...
-              </Typography>
+             <div className="flex w-full h-full justify-center items-center">
+							 <div className={styles.loadingSpinner}></div>
+						 </div>
             </TableCell>
           </TableRow>
         </TableBody>
