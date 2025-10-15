@@ -16,7 +16,7 @@ const ACCESS_TOKEN_KEY = 'accessToken';
  */
 export const setAccessToken = (token: string) => {
     Cookies.set(ACCESS_TOKEN_KEY, token, {
-        expires: 1 / 96, // 15 minutes
+        expires: 7, // 7 days
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',

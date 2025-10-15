@@ -11,11 +11,13 @@
   --min-width: 1440px;
   --base-background-color-1: #F5F6FA;
   --color-gray-border: #C7C7C7;
+	--color-disabled-icon: #C4C4C4;
   --color-gray-text-input: #787878;
   --color-gray-border-200: #EDEDED;
   --color-black-1: #222227;
   --color-text-1: #242424;
   --color-text-2: #424242;
+	--color-text-gray-1: #B2B2B2;
   --color-text-3: #707070;
   --color-text-4: #959595;
   --color-text-5: #bbbbbb;

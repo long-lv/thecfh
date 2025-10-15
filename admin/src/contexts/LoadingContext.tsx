@@ -61,7 +61,7 @@ export const LoadingProvider: React.FC<LoadingProviderProps> = ({ children }) =>
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 9999,
+            zIndex: 'var(--z-index-dev-overlay)',
           }}
         >
           <Box

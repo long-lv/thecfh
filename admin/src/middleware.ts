@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
 
 	// If ALREADY logged in + accessing the login page → redirect to dashboard
 	if (accessToken && isPublicRoute) {
-		const dashboardUrl = new URL(routesConstain.dashboards.path, request.url);
+		const dashboardUrl = new URL(routesConstain?.dashboards.path, request.url);
 		return NextResponse.redirect(dashboardUrl);
 	}
 
