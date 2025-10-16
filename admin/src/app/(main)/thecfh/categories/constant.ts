@@ -1,3 +1,5 @@
+import { ICategories } from "@/src/lib/type/categories.type";
+
 export const columns = [
   {
     id: "name",
@@ -18,6 +20,6 @@ export const optionAction = [
 	},
 	{
 		label: 'Delete',
-		value: 'delete'
+		value: ''
 	}
 ]

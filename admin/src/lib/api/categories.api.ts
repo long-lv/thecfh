@@ -6,16 +6,16 @@ export const categoriesApi = {
 	getCategories: (query: ICategoriesGetQuery): Promise<ICategoriesResponse> => {
 		return ApiUtil.get(`${PATH_CONSTAINT}/list`, { params: query});
 	},
-	getCategoryById: (id: string): Promise<ICategories> => {
+	getCategoryById: (id: number): Promise<ICategories> => {
 		return ApiUtil.get(`${PATH_CONSTAINT}/${id}`)
 	},
 	createCategory: (data: ICategoryRequest): Promise<ICategories> => {
 		return ApiUtil.post(`${PATH_CONSTAINT}/create`, data);
 	},
-	updateCategory: (id: string, data: ICategoryRequest): Promise<ICategories> => {
+	updateCategory: (id: number, data: ICategoryRequest): Promise<ICategories> => {
 		return ApiUtil.put(`${PATH_CONSTAINT}/update/${id}`, data);
 	},
-	deleteCategory: (id: string): Promise<void> => {
+	deleteCategory: (id: number): Promise<void> => {
 		return ApiUtil.delete(`${PATH_CONSTAINT}/delete/${id}`);
 	}
 }

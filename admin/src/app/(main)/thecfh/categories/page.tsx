@@ -1,23 +1,30 @@
 "use client";
 
-import ThecfhButton from "@/src/components/thecfhButton";
+import SingleDropDownMenu from "@/src/components/singleDropDownMenu";
 import ThecfhPaginator from "@/src/components/thecfhPaginator";
 import ThecfhTable from "@/src/components/thecfhTable";
 import {
   PAGINATION_PAGE_DEFAULT,
   PAGINATION_SIZE_DEFAULT,
 } from "@/src/constants";
-import { useGetCategories } from "@/src/hooks/useCategories";
+import {
+  useGetCategories,
+  useGetCategoryBydId,
+} from "@/src/hooks/useCategories";
 import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
 import { useGlobalToast } from "@/src/hooks/useGlobalToast";
 import { IPaginatorResponse } from "@/src/lib/type/api.type";
 import {
-  ICategoriesGetQuery,
   ICategories,
+  ICategoriesGetQuery,
 } from "@/src/lib/type/categories.type";
 import { useEffect, useState } from "react";
+import DetailCategory from "./components/detailCategory";
+import { modeFormCateogy } from "./components/detailCategory/type";
 import { columns, optionAction } from "./constant";
-import SingleDropDownMenu from "@/src/components/SingleDropDownMenu";
+import ThecfhInput from "@/src/components/thecfhInput";
+import SearchButton from "@/src/components/searchButton";
+import ThecfhButton from "@/src/components/thecfhButton";
 
 export default function Categories() {
   /** [Hook] Toast message */
@@ -38,7 +45,9 @@ export default function Categories() {
     useGetCategories(query);
 
   /** [State] categories list */
-  const [dataCategories, setDataCategories] = useState<ICategories[]>([]);
+  const [listCategories, setListCategories] = useState<ICategories[]>([]);
+
+  const [selectedData, setSelectedData] = useState<ICategories | null>(null);
 
   /** [State] paginator */
   const [paginator, setPaginator] = useState<IPaginatorResponse>({
@@ -47,8 +56,6 @@ export default function Categories() {
     page: PAGINATION_PAGE_DEFAULT,
     totalPage: 0,
   });
-
-  const [selectdAction, setSelectedAction] = useState("");
 
   const handlePageChange = (page: number) => {
     setQuery((prev) => ({
@@ -65,42 +72,76 @@ export default function Categories() {
     }));
   };
 
+  const hanldeAction = (action: string, id: number) => {
+    if (action.toLowerCase() === "edit") {
+      handleClickEdit(id);
+    } else {
+      handleClickDelete(id);
+    }
+  };
+
   const handleClickEdit = (id: number) => {
-    console.log(id, "id edit");
+    console.log(id, "idElementSelectEdit");
   };
 
   const handleClickDelete = (id: number) => {
-    console.log(id, "id delete");
+    console.log(id, "idElementSelectDelete");
   };
 
-  const renderAction = () => {
+  const handleClickCateName = (id: number) => {
+    setIsOpenDialogDetail(true);
+    const elementSelected =
+      listCategories.find((cate) => {
+        return cate.id === id;
+      }) ?? null;
+    setSelectedData(elementSelected);
+  };
+  const renderAction = (id: number) => {
     return (
       <div className="flex gap-1">
         <SingleDropDownMenu
           isMoreIcon={true}
           options={optionAction}
-          value={selectdAction}
-          onChangeValue={(val) => setSelectedAction(val)}
-					width="120px"
+          onChangeValue={(val) => {
+            hanldeAction(val, id);
+          }}
+          width="120px"
         />
       </div>
     );
   };
   const columsFomat = [
-    ...columns,
+    ...columns.map((col) => {
+      if (col.id === "name") {
+        return {
+          ...col,
+          format: (_, row: ICategories) => {
+            return (
+              <div
+                className="cursor-pointer hover:text-[var(--color-blue-cenematic)]"
+                onClick={() => handleClickCateName(row.id)}
+              >
+                {row?.name}
+              </div>
+            );
+          },
+        };
+      }
+      return col;
+    }),
     {
       id: "action",
-      label: "action",
+      label: "Action",
       format: (_, row?: ICategories) => {
         if (!row) return null;
-        return renderAction();
+        return renderAction(row.id);
       },
     },
   ];
 
   useEffect(() => {
     if (data?.data) {
-      setDataCategories(data.data);
+      setListCategories(data.data);
     }
 
     if (data?.meta) {
@@ -110,7 +151,7 @@ export default function Categories() {
 
   useEffect(() => {
     if (isPending) {
-      setDataCategories([]);
+      setListCategories([]);
     }
     if (isFetching) {
       loading.showLoading();
@@ -125,11 +166,24 @@ export default function Categories() {
     }
   }, [isError]);
 
+  const [isOpenDialogDetail, setIsOpenDialogDetail] = useState(false);
   return (
     <div className="container">
+      <div className="header-page flex justify-between !mb-4">
+        <h4 className="text-2xl font-bold ledding-[100%]">Categories</h4>
+        <div className="menu-header flex gap-2">
+          <ThecfhInput value="" placeholder="Search" />
+          <SearchButton />
+          <ThecfhButton
+            className="w-[100px] h-[35px] px-3 py-2 bg-[var(--color-blue-cenematic)] rounded !mb-2 text-white flex items-center justify-center"
+            label="Create"
+          />
+        </div>
+      </div>
+      <div className="flex justify-end"></div>
       <ThecfhTable
         columns={columsFomat}
-        data={dataCategories}
+        data={listCategories}
         loading={isFetching || isPending}
         isError={isError}
         errorMessage="An error, try again!"
@@ -141,6 +195,13 @@ export default function Categories() {
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
       ></ThecfhPaginator>
+      <DetailCategory
+        isOpen={isOpenDialogDetail}
+        data={selectedData}
+        mode={modeFormCateogy.VIEW}
+        onCancel={() => setIsOpenDialogDetail(false)}
+        onSubmit={(data) => console.log(data)}
+      />
     </div>
   );
 }

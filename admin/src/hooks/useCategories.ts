@@ -8,7 +8,7 @@ export const CATEGORIES_QUERY_KEYS = {
 	lists: () => [...CATEGORIES_QUERY_KEYS.all, 'list'] as const,
 	list: (query: ICategoriesGetQuery) => [...CATEGORIES_QUERY_KEYS.lists(), query] as const,
 	details: () => [...CATEGORIES_QUERY_KEYS.all, 'detail'] as const,
-	detail: (id: string) => [...CATEGORIES_QUERY_KEYS.details(), id] as const,
+	detail: (id: number) => [...CATEGORIES_QUERY_KEYS.details(), id] as const,
 }
 
 /** [Hook] get categories */
@@ -29,7 +29,7 @@ export const useGetCategories = (
 /** [Hook] get category by id */
 
 export const useGetCategoryBydId = (
-	id: string,
+	id: number,
 	options?: UseQueryOptions<ICategories, Error>
 ) => {
 	return useQuery({
@@ -64,7 +64,7 @@ export const useUpdateCategory = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ id, data } : { id: string, data: ICategoryRequest}) => categoriesApi.updateCategory(id, data),
+		mutationFn: ({ id, data } : { id: number, data: ICategoryRequest}) => categoriesApi.updateCategory(id, data),
 		onSuccess: (updateCategory, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: CATEGORIES_QUERY_KEYS.lists()
@@ -87,7 +87,7 @@ export const useDeleteCategory = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (id: string) => categoriesApi.deleteCategory(id),
+		mutationFn: (id: number) => categoriesApi.deleteCategory(id),
 		onSuccess: (_, delectedId) => {
 			queryClient.invalidateQueries({
 				queryKey: CATEGORIES_QUERY_KEYS.lists(),

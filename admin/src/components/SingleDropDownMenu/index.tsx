@@ -43,9 +43,7 @@ export default function SingleDropDownMenu(props: ISingleDropDownProps) {
       })?.label || ""
     );
   };
-  useEffect(() => {
-    getLabelByValue();
-  }, [selectedValue]);
+
   return (
     <div>
       {isMoreIcon ? (
@@ -109,7 +107,7 @@ export default function SingleDropDownMenu(props: ISingleDropDownProps) {
               } px-3 py-2 !flex !justify-between hover:!bg-[var(--color-blue-cenematic-200)]`}
               style={{
                 backgroundColor:
-                  selectedValue === option.value
+                  (selectedValue && selectedValue === option.value)
                     ? "var(--color-blue-cenematic-200)"
                     : "",
               }}
@@ -118,14 +116,14 @@ export default function SingleDropDownMenu(props: ISingleDropDownProps) {
                 className="text-sm font-normal ledding-[140%] hover:!text-[var(--color-blue-cenematic)]"
                 style={{
                   color:
-                    selectedValue === option.value
+                    (selectedValue && selectedValue === option.value)
                       ? "var(--color-blue-cenematic)"
                       : "var(--color-black-1)",
                 }}
               >
                 {option.label}
               </span>
-              {selectedValue === option.value ? (
+              {(selectedValue && selectedValue === option.value) ? (
                 <Image
                   src={checkedIcon}
                   width={16}
