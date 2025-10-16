@@ -1,9 +1,9 @@
 'use client';
 
+import { FormControl, MenuItem, Select } from '@mui/material';
 import React from 'react';
-import { Select, MenuItem, FormControl } from '@mui/material';
-import { IPropsThecfhPaginator } from './type';
 import styles from './style.module.css';
+import { IPropsThecfhPaginator } from './type';
 
 const ThecfhPaginator: React.FC<IPropsThecfhPaginator> = (props) => {
   const {
@@ -24,45 +24,48 @@ const ThecfhPaginator: React.FC<IPropsThecfhPaginator> = (props) => {
     size = 'medium',
   } = props;
 
+  // Convert 1-based page to 0-based for internal calculations
+  const internalPage = page - 1;
+  
   const totalPages = Math.ceil(totalRows / rowsPerPage);
-  const startIndex = page * rowsPerPage + 1;
-  const endIndex = Math.min((page + 1) * rowsPerPage, totalRows);
+  const startIndex = internalPage * rowsPerPage + 1;
+  const endIndex = Math.min((internalPage + 1) * rowsPerPage, totalRows);
 
   const handleFirstPage = () => {
-    if (!disabled && page > 0) {
-      onPageChange(0);
+    if (!disabled && internalPage > 0) {
+      onPageChange(1); // Convert to 1-based
     }
   };
 
   const handlePreviousPage = () => {
-    if (!disabled && page > 0) {
-      onPageChange(page - 1);
+    if (!disabled && internalPage > 0) {
+      onPageChange(page - 1); // Already 1-based
     }
   };
 
   const handleNextPage = () => {
-    if (!disabled && page < totalPages - 1) {
-      onPageChange(page + 1);
+    if (!disabled && internalPage < totalPages - 1) {
+      onPageChange(page + 1); // Already 1-based
     }
   };
 
   const handleLastPage = () => {
-    if (!disabled && page < totalPages - 1) {
-      onPageChange(totalPages - 1);
+    if (!disabled && internalPage < totalPages - 1) {
+      onPageChange(totalPages); // Convert to 1-based
     }
   };
 
   const handlePageClick = (newPage: number) => {
-    if (!disabled && newPage !== page && newPage >= 0 && newPage < totalPages) {
-      onPageChange(newPage);
+    if (!disabled && newPage !== internalPage && newPage >= 0 && newPage < totalPages) {
+      onPageChange(newPage + 1); // Convert to 1-based
     }
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleRowsPerPageChange = (event: any) => {
     const newRowsPerPage = event.target.value as number;
     onRowsPerPageChange(newRowsPerPage);
     // Reset to first page when changing rows per page
-    onPageChange(0);
+    onPageChange(1); // Convert to 1-based
   };
 
   // Generate page numbers to display
@@ -143,7 +146,7 @@ const ThecfhPaginator: React.FC<IPropsThecfhPaginator> = (props) => {
           <button
             className={styles.navigationButton}
             onClick={handleFirstPage}
-            disabled={disabled || page === 0}
+            disabled={disabled || internalPage === 0}
             title="First page"
           >
             ⟪
@@ -154,7 +157,7 @@ const ThecfhPaginator: React.FC<IPropsThecfhPaginator> = (props) => {
         <button
           className={styles.navigationButton}
           onClick={handlePreviousPage}
-          disabled={disabled || page === 0}
+          disabled={disabled || internalPage === 0}
           title="Previous page"
         >
           ‹
@@ -173,7 +176,7 @@ const ThecfhPaginator: React.FC<IPropsThecfhPaginator> = (props) => {
             ) : (
               <button
                 className={`${styles.pageButton} ${
-                  pageNum === page ? styles.active : ''
+                  pageNum === internalPage ? styles.active : ''
                 }`}
                 onClick={() => handlePageClick(pageNum as number)}
                 disabled={disabled}
@@ -189,7 +192,7 @@ const ThecfhPaginator: React.FC<IPropsThecfhPaginator> = (props) => {
         <button
           className={styles.navigationButton}
           onClick={handleNextPage}
-          disabled={disabled || page >= totalPages - 1}
+          disabled={disabled || internalPage >= totalPages - 1}
           title="Next page"
         >
           ›
@@ -200,7 +203,7 @@ const ThecfhPaginator: React.FC<IPropsThecfhPaginator> = (props) => {
           <button
             className={styles.navigationButton}
             onClick={handleLastPage}
-            disabled={disabled || page >= totalPages - 1}
+            disabled={disabled || internalPage >= totalPages - 1}
             title="Last page"
           >
             ⟫

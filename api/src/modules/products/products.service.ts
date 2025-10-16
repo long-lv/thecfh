@@ -110,7 +110,7 @@ export class ProductsService {
 		return {
 			meta: {
 				total,
-				limit: size,
+				size,
 				page,
 				totalPage: Math.ceil(total / Number(size)),
 			},

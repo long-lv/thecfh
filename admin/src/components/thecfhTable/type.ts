@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
-export interface IColumn<T = Record<string, unknown>> {
+export interface IColumn<T = any> {
   id: string;
   label: string;
   minWidth?: number;
-  align?: 'left' | 'right' | 'center';
+  align?: "left" | "right" | "center";
   format?: (value: unknown, row?: T) => string | ReactNode;
   sortable?: boolean;
   searchable?: boolean;
@@ -12,26 +12,29 @@ export interface IColumn<T = Record<string, unknown>> {
 
 export interface ISortConfig {
   key: string;
-  direction: 'asc' | 'desc';
+  direction: "asc" | "desc";
 }
 
-export interface IPropsThecfhTable<T = Record<string, unknown>> {
+export interface IPropsThecfhTable<T = any> {
   columns: IColumn<T>[];
-  rows: T[];
+  data: T[];
   loading?: boolean;
   emptyMessage?: string;
+	isError?: boolean;
+	errorMessage?: string;
   stickyHeader?: boolean;
   maxHeight?: number;
   className?: string;
   style?: React.CSSProperties;
-  onSort?: (sortConfig: ISortConfig) => void;
-  onRowClick?: (row: T, index: number) => void;
   selectedRows?: string[];
-  onSelectionChange?: (selectedRows: string[]) => void;
   selectable?: boolean;
-  getRowId?: (row: T) => string;
   dense?: boolean;
   striped?: boolean;
   hover?: boolean;
   border?: boolean;
+	minHeight?: string;
+	onSelectionChange?: (selectedRows: string[]) => void;
+  onSort?: (sortConfig: ISortConfig) => void;
+  onRowClick?: (row: T, index: number) => void;
+  getRowId?: (row: T, index: number) => string;
 }

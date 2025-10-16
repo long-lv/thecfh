@@ -55,6 +55,7 @@ export class CategoriesService {
 			.select([
 				'categories.id',
 				'categories.name',
+				'categories.description',
 				'categories.createdAt',
 				'categories.updatedAt',
 			]);
@@ -72,7 +73,7 @@ export class CategoriesService {
 		return {
 			meta: {
 				total,
-				limit: size,
+				size,
 				page,
 				totalPage: Math.ceil(total / size),
 			},

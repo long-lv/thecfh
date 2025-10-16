@@ -1,8 +1,8 @@
 export interface IPropsThecfhPaginator {
-  page: number;
+  page: number; // 1-based page number (1, 2, 3, ...)
   rowsPerPage: number;
   totalRows: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (page: number) => void; // Receives 1-based page number
   onRowsPerPageChange: (rowsPerPage: number) => void;
   rowsPerPageOptions?: number[];
   showFirstButton?: boolean;

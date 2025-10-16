@@ -13,3 +13,6 @@ export enum StatusUser {
 	ACTIVE= "ACTIVE",
 	VERIFY= "VERIFY"
 }
+
+export const PAGINATION_SIZE_DEFAULT = 25;
+export const PAGINATION_PAGE_DEFAULT = 1;

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { useState } from 'react';
 import { fn } from 'storybook/test';
 import ThecfhPaginator from './index';
 import { IPropsThecfhPaginator } from './type';
-import { useState } from 'react';
 
 const meta: Meta<typeof ThecfhPaginator> = {
   title: 'Components/ThecfhPaginator',
@@ -19,7 +19,7 @@ const meta: Meta<typeof ThecfhPaginator> = {
   argTypes: {
     page: {
       control: 'number',
-      description: 'Current page number (0-based)',
+      description: 'Current page number (1-based)',
     },
     rowsPerPage: {
       control: 'number',
@@ -84,7 +84,7 @@ const PaginatorWrapper = (args: IPropsThecfhPaginator) => {
 
   const handleRowsPerPageChange = (newRowsPerPage: number) => {
     setRowsPerPage(newRowsPerPage);
-    setPage(0); // Reset to first page
+    setPage(1); // Reset to first page
     args.onRowsPerPageChange(newRowsPerPage);
   };
 
@@ -147,7 +147,7 @@ export const SmallDataset: Story = {
 export const LargeDataset: Story = {
   render: (args) => <PaginatorWrapper {...args} />,
   args: {
-    page: 0,
+    page: 1,
     rowsPerPage: 25,
     totalRows: 1000,
   },

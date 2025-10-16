@@ -792,7 +792,7 @@ const DemoPage = () => {
         
         <ThecfhTable
           columns={tableColumns}
-          rows={tableData}
+          data={tableData}
           loading={tableLoading}
           selectable
           selectedRows={selectedRows}

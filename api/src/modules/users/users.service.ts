@@ -57,7 +57,7 @@ export class UsersService {
 		return {
 			meta: {
 				total,
-				limit: size,
+				size,
 				page,
 				totalPage: GenerateDataUtil.generateTotalPage(total, size),
 			},
@@ -108,7 +108,7 @@ export class UsersService {
 			data: admins,
 			meta: {
 				total,
-				limit: size,
+				size,
 				page,
 				totalPage: GenerateDataUtil.generateTotalPage(total, size),
 			},
