@@ -10,3 +10,14 @@ export const columns = [
     sortable: false,
   }
 ];
+
+export const optionAction = [
+	{
+		label: 'Edit',
+		value: 'edit'
+	},
+	{
+		label: 'Delete',
+		value: 'delete'
+	}
+]
