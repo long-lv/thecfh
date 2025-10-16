@@ -49,6 +49,8 @@ export default function Categories() {
 
   const [selectedData, setSelectedData] = useState<ICategories | null>(null);
 
+	const [mode, setMode] = useState(modeFormCateogy.VIEW);
+
   /** [State] paginator */
   const [paginator, setPaginator] = useState<IPaginatorResponse>({
     total: 0,
@@ -119,7 +121,10 @@ export default function Categories() {
             return (
               <div
                 className="cursor-pointer hover:text-[var(--color-blue-cenematic)]"
-                onClick={() => handleClickCateName(row.id)}
+                onClick={() => {
+									handleClickCateName(row.id);
+									setMode(modeFormCateogy.VIEW);
+								}}
               >
                 {row?.name}
               </div>
@@ -177,6 +182,11 @@ export default function Categories() {
           <ThecfhButton
             className="w-[100px] h-[35px] px-3 py-2 bg-[var(--color-blue-cenematic)] rounded !mb-2 text-white flex items-center justify-center"
             label="Create"
+						onClick={() => {
+							setIsOpenDialogDetail(true);
+							setSelectedData(null);
+							setMode(modeFormCateogy.CREATE);
+						}}
           />
         </div>
       </div>
@@ -198,7 +208,7 @@ export default function Categories() {
       <DetailCategory
         isOpen={isOpenDialogDetail}
         data={selectedData}
-        mode={modeFormCateogy.VIEW}
+        mode={mode}
         onCancel={() => setIsOpenDialogDetail(false)}
         onSubmit={(data) => console.log(data)}
       />

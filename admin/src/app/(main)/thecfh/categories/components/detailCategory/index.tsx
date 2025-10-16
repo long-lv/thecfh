@@ -67,8 +67,8 @@ export default function DetailCategory(props: IPropDetailCategory) {
       isHiddenBorderTop
     >
       <div className="form flex flex-col gap-2.5">
-				<ThecfhInput value={data?.name} disabled={isModeView} width="100%"></ThecfhInput>
-				<ThecfhTextArea value={data?.description} disabled={isModeView} width="100%"></ThecfhTextArea>
+				<ThecfhInput value={data?.name} disabled={isModeView} width="100%" placeholder="Category name..."></ThecfhInput>
+				<ThecfhTextArea value={data?.description} disabled={isModeView} width="100%" placeholder="Description..."></ThecfhTextArea>
 			</div>
     </ThecfhDialog>
   );
