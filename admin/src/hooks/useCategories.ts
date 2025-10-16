@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
-import { ICategoiresGetQuery, ICategories, ICategoriesResponse, ICategoryRequest } from "../lib/type/categories.type";
+import { ICategoriesGetQuery, ICategories, ICategoriesResponse, ICategoryRequest } from "../lib/type/categories.type";
 import { categoriesApi } from "../lib/api/categories.api";
 import { useCallback, useState } from "react";
 
 export const CATEGORIES_QUERY_KEYS = {
 	all: ['categories'] as const,
 	lists: () => [...CATEGORIES_QUERY_KEYS.all, 'list'] as const,
-	list: (query: ICategoiresGetQuery) => [...CATEGORIES_QUERY_KEYS.lists(), query] as const,
+	list: (query: ICategoriesGetQuery) => [...CATEGORIES_QUERY_KEYS.lists(), query] as const,
 	details: () => [...CATEGORIES_QUERY_KEYS.all, 'detail'] as const,
 	detail: (id: string) => [...CATEGORIES_QUERY_KEYS.details(), id] as const,
 }
@@ -14,7 +14,7 @@ export const CATEGORIES_QUERY_KEYS = {
 /** [Hook] get categories */
 
 export const useGetCategories = (
-	query: ICategoiresGetQuery,
+	query: ICategoriesGetQuery,
 	options?: UseQueryOptions<ICategoriesResponse, Error>
 ) => {
 	return useQuery({
@@ -35,7 +35,7 @@ export const useGetCategoryBydId = (
 	return useQuery({
 		queryKey: CATEGORIES_QUERY_KEYS.detail(id),
 		queryFn: () => categoriesApi.getCategoryById(id),
-		staleTime: 5 * 60 * 100,
+		staleTime: 5 * 60 * 1000,
 		...options,
 	})
 }
@@ -105,13 +105,13 @@ export const useDeleteCategory = () => {
 /** [Hook] Get categories with pagination and search */
 
 export const useCategoriesWithQuery = (
-	initialQuery: ICategoiresGetQuery
+	initialQuery: ICategoriesGetQuery
 ) => {
-	const [ query, setQuery ] = useState<ICategoiresGetQuery>(initialQuery);
+	const [ query, setQuery ] = useState<ICategoriesGetQuery>(initialQuery);
 
 	const categoriesQuery = useGetCategories(query);
 
-	const updateQuery = useCallback((newQuery: Partial<ICategoiresGetQuery>) => {
+	const updateQuery = useCallback((newQuery: Partial<ICategoriesGetQuery>) => {
 		setQuery(prev => ({ ...prev, ...newQuery }))
 	}, [])
 

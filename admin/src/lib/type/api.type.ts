@@ -11,8 +11,8 @@ export interface ApiResponse<T> {
 }
 
 export interface IPaginatorResponse {
-	total: number | null,
+	total: number,
 	size: number,
 	page: string | number,
-	totalPage: number | null,
+	totalPage: number,
 }

@@ -12,11 +12,14 @@ import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
 import { useGlobalToast } from "@/src/hooks/useGlobalToast";
 import { IPaginatorResponse } from "@/src/lib/type/api.type";
 import {
-  ICategoiresGetQuery,
+  ICategoriesGetQuery,
   ICategories
 } from "@/src/lib/type/categories.type";
 import { useEffect, useState } from "react";
 import { columns } from "./constant";
+import Image from "next/image";
+import actionIcon from "@/src/assets/images/action_icon.svg"
+import SingleSelectionDropDown from "@/src/components/Dropdown";
 
 export default function Categories() {
   /** [Hook] Toast message */
@@ -25,7 +28,7 @@ export default function Categories() {
   const loading = useGlobalLoading();
 
   /** [State] query */
-  const [query, setQuery] = useState<ICategoiresGetQuery>({
+  const [query, setQuery] = useState<ICategoriesGetQuery>({
     keyword: "",
     order: "",
     page: PAGINATION_PAGE_DEFAULT,
@@ -33,18 +36,20 @@ export default function Categories() {
   });
 
   /** [Hook] useGetCategoriesList */
-  const { data, isLoading, isError } = useGetCategories(query);
+  const { data, isPending, isError, isSuccess, isFetching, refetch } = useGetCategories(query);
 
   /** [State] categories list */
   const [dataCategories, setDataCategories] = useState<ICategories[]>([]);
 
   /** [State] paginator */
   const [paginator, setPaginator] = useState<IPaginatorResponse>({
-    total: null,
+    total: 0,
     size: PAGINATION_SIZE_DEFAULT,
     page: PAGINATION_PAGE_DEFAULT,
-    totalPage: null,
+    totalPage: 0,
   });
+
+	const [isOpenMenuAction, setIsOpenMenuAction] = useState(false);
 
 	const handlePageChange = (page: number) => {
     setQuery((prev) => ({
@@ -69,6 +74,13 @@ export default function Categories() {
 		console.log(id, 'id delete');
 	}
 
+	const renderAction = () => {
+		return (
+			<div className="flex gap-1">
+				<Image className="cursor-pointer" src={actionIcon} width={20} height={20} alt="action_icon" onClick={() => setIsOpenMenuAction(!isOpenMenuAction)}/>
+			</div>
+		)
+	}
 	const columsFomat = [
 		...columns,
 		{
@@ -77,10 +89,7 @@ export default function Categories() {
 			format: (_, row?: ICategories) => {
 				if (!row) return null;
 				return (
-					<div className="flex gap-1">
-						<ThecfhButton label="Edit" onClick={() => handleClickEdit(row.id)}></ThecfhButton>
-						<ThecfhButton label="Delete" onClick={() => handleClickDelete(row.id)}></ThecfhButton>
-					</div>
+					renderAction()
 				);
 			}
 		}
@@ -97,28 +106,28 @@ export default function Categories() {
   }, [data]);
 
   useEffect(() => {
-    if (isLoading) {
+    if (isPending) {
       setDataCategories([]);
     }
-  }, [isLoading]);
+		if (isFetching) {
+      loading.showLoading();
+    } else {
+      loading.hideLoading();
+    }
+  }, [isPending, isFetching]);
 
   useEffect(() => {
     if (isError) {
       toast.error("get categories false");
     }
-    if (isLoading) {
-      loading.showLoading();
-    } else {
-      loading.hideLoading();
-    }
-  }, [isError, isLoading]);
+  }, [isError]);
 
   return (
     <div className="container">
       <ThecfhTable
         columns={columsFomat}
         data={dataCategories}
-        loading={isLoading}
+        loading={isFetching || isPending}
         isError={isError}
         errorMessage="An error, try again!"
       ></ThecfhTable>

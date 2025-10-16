@@ -1,9 +1,9 @@
 import ApiUtil from "@/src/utils/apiUtil";
-import { ICategoiresGetQuery, ICategories, ICategoriesResponse, ICategoryRequest } from "../type/categories.type";
+import { ICategoriesGetQuery, ICategories, ICategoriesResponse, ICategoryRequest } from "../type/categories.type";
 
 const PATH_CONSTAINT= "/categories";
 export const categoriesApi = {
-	getCategories: (query: ICategoiresGetQuery): Promise<ICategoriesResponse> => {
+	getCategories: (query: ICategoriesGetQuery): Promise<ICategoriesResponse> => {
 		return ApiUtil.get(`${PATH_CONSTAINT}/list`, { params: query});
 	},
 	getCategoryById: (id: string): Promise<ICategories> => {

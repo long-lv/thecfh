@@ -14,7 +14,7 @@ export interface ICategories {
 	description: string;
 }
 
-export interface ICategoiresGetQuery { 
+export interface ICategoriesGetQuery { 
 	keyword: string;
 	order: string;
 	page: number;
