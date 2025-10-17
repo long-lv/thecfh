@@ -11,5 +11,5 @@ export default interface IPropThecfhTextArea {
 	minRows?: number;
 	defaultValue?: string;
   onChange?: (value: string) => void;
-	onBlur? : (event: React.FocusEvent<HTMLInputElement>) => void;
+	onBlur? : (event: React.FocusEvent<HTMLTextAreaElement>) => void;
 }

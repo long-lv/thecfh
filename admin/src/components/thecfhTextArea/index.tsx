@@ -30,6 +30,7 @@ export default function ThecfhTextArea(props: IPropThecfhTextArea) {
                 leading-[var(--line-height-100-percent)]
                 gap-2 flex 
 								${error ? "border-red-500" : "border-[var(--color-gray-border)]"}
+								${disabled ? 'bg-[var(--color-gray-border-200)] text-black' : ''}
                 ${classNameInput || ""}
               `}
           style={{
@@ -41,7 +42,7 @@ export default function ThecfhTextArea(props: IPropThecfhTextArea) {
           disabled={disabled}
 					defaultValue={defaultValue}
           onChange={(e) => onChange?.(e.target.value)}
-          onBlur={() => onBlur}
+          onBlur={onBlur}
         />
       </div>
       {error && (

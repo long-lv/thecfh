@@ -7,7 +7,9 @@ export default function SearchButton(props: IPropsSeachButton) {
   return (
     <button
       onClick={onClick}
-      className={`${className ? className : ''} w-8 h-[35px] flex justify-center items-center border rounded-lg border-[var(--color-gray-border-200)] bg-`}
+      className={`${
+        className ? className : ""
+      } w-8 h-[35px] flex justify-center items-center border rounded-lg border-[var(--color-gray-border-200)] cursor-pointer`}
       style={{
         ...style,
       }}

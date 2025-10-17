@@ -1,16 +1,15 @@
 "use client";
 
 import SingleDropDownMenu from "@/src/components/singleDropDownMenu";
+import ThecfhButton from "@/src/components/thecfhButton";
 import ThecfhPaginator from "@/src/components/thecfhPaginator";
+import ThecfhSearchBar from "@/src/components/thecfhSearchBar";
 import ThecfhTable from "@/src/components/thecfhTable";
 import {
   PAGINATION_PAGE_DEFAULT,
   PAGINATION_SIZE_DEFAULT,
 } from "@/src/constants";
-import {
-  useGetCategories,
-  useGetCategoryBydId,
-} from "@/src/hooks/useCategories";
+import { useCreateCategory, useDeleteCategory, useGetCategories, useUpdateCategory } from "@/src/hooks/useCategories";
 import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
 import { useGlobalToast } from "@/src/hooks/useGlobalToast";
 import { IPaginatorResponse } from "@/src/lib/type/api.type";
@@ -20,11 +19,11 @@ import {
 } from "@/src/lib/type/categories.type";
 import { useEffect, useState } from "react";
 import DetailCategory from "./components/detailCategory";
-import { modeFormCateogy } from "./components/detailCategory/type";
+import {
+  modeFormCateogy,
+  TReqDataCategory,
+} from "./components/detailCategory/type";
 import { columns, optionAction } from "./constant";
-import ThecfhInput from "@/src/components/thecfhInput";
-import SearchButton from "@/src/components/searchButton";
-import ThecfhButton from "@/src/components/thecfhButton";
 
 export default function Categories() {
   /** [Hook] Toast message */
@@ -41,15 +40,27 @@ export default function Categories() {
   });
 
   /** [Hook] useGetCategoriesList */
-  const { data, isPending, isError, isSuccess, isFetching, refetch } =
-    useGetCategories(query);
+  const { data, isPending, isError, isFetching } = useGetCategories(query);
+
+  const createdCategory = useCreateCategory();
+
+	const updatedCate = useUpdateCategory();
+
+	const deletedCate = useDeleteCategory();
+
+	const isSubmitting = 
+  createdCategory.isPending || 
+  updatedCate.isPending || 
+  deletedCate.isPending;
 
   /** [State] categories list */
   const [listCategories, setListCategories] = useState<ICategories[]>([]);
 
   const [selectedData, setSelectedData] = useState<ICategories | null>(null);
 
-	const [mode, setMode] = useState(modeFormCateogy.VIEW);
+  const [mode, setMode] = useState(modeFormCateogy.VIEW);
+
+  const [isOpenDialogDetail, setIsOpenDialogDetail] = useState(false);
 
   /** [State] paginator */
   const [paginator, setPaginator] = useState<IPaginatorResponse>({
@@ -74,6 +85,14 @@ export default function Categories() {
     }));
   };
 
+  const getElementSelected = (id: number) => {
+    return (
+      listCategories.find((cate) => {
+        return cate.id === id;
+      }) ?? null
+    );
+  };
+
   const hanldeAction = (action: string, id: number) => {
     if (action.toLowerCase() === "edit") {
       handleClickEdit(id);
@@ -83,7 +102,10 @@ export default function Categories() {
   };
 
   const handleClickEdit = (id: number) => {
-    console.log(id, "idElementSelectEdit");
+    const elementSelected = getElementSelected(id);
+    setSelectedData(elementSelected);
+    setIsOpenDialogDetail(true);
+    setMode(modeFormCateogy.EDIT);
   };
 
   const handleClickDelete = (id: number) => {
@@ -92,12 +114,68 @@ export default function Categories() {
 
   const handleClickCateName = (id: number) => {
     setIsOpenDialogDetail(true);
-    const elementSelected =
-      listCategories.find((cate) => {
-        return cate.id === id;
-      }) ?? null;
+    const elementSelected = getElementSelected(id);
     setSelectedData(elementSelected);
   };
+
+
+	  const handleSearch = (keyword: string) => {
+    setQuery((prev) => ({
+      ...prev,
+      keyword,
+      page: PAGINATION_PAGE_DEFAULT,
+    }));
+  };
+
+  const onCreateCate = (data: TReqDataCategory) => {
+    loading.showLoading();
+    createdCategory.mutate(data, {
+      onSuccess: () => {
+        toast.success("Create category success!");
+        handleCloseDialogDetail();
+      },
+      onError: (error) => {
+        toast.error(error.response?.data.message ?? "Error action");
+      },
+      onSettled: () => {
+        loading.hideLoading();
+      },
+    });
+  };
+
+	const onEditCate = (data: TReqDataCategory) => {
+		loading.showLoading();
+		if (selectedData?.id) {
+			updatedCate.mutate({id: selectedData.id, data}, {
+				onSuccess: () => {
+					toast.success('Update category success');
+					handleCloseDialogDetail();
+				},
+				onError: (error) => {
+					toast.error(error.response?.data.message ?? "Error action")
+				},
+				onSettled: () => {
+					loading.hideLoading();
+				}
+			})
+		}
+	}
+  const handleSubmit = (data: TReqDataCategory) => {
+    if (mode === modeFormCateogy.CREATE) {
+      onCreateCate(data);
+    } 
+
+		if (mode === modeFormCateogy.EDIT) {
+			onEditCate(data);
+		}
+  };
+
+  const handleCloseDialogDetail = () => {
+    setIsOpenDialogDetail(false);
+    setSelectedData(null);
+    setMode(modeFormCateogy.VIEW);
+  };
+
   const renderAction = (id: number) => {
     return (
       <div className="flex gap-1">
@@ -112,19 +190,20 @@ export default function Categories() {
       </div>
     );
   };
+	
   const columsFomat = [
     ...columns.map((col) => {
       if (col.id === "name") {
         return {
           ...col,
-          format: (_, row: ICategories) => {
+          format: (_: unknown, row: ICategories) => {
             return (
               <div
                 className="cursor-pointer hover:text-[var(--color-blue-cenematic)]"
                 onClick={() => {
-									handleClickCateName(row.id);
-									setMode(modeFormCateogy.VIEW);
-								}}
+                  handleClickCateName(row.id);
+                  setMode(modeFormCateogy.VIEW);
+                }}
               >
                 {row?.name}
               </div>
@@ -137,7 +216,7 @@ export default function Categories() {
     {
       id: "action",
       label: "Action",
-      format: (_, row?: ICategories) => {
+      format: (_: unknown, row?: ICategories) => {
         if (!row) return null;
         return renderAction(row.id);
       },
@@ -171,22 +250,20 @@ export default function Categories() {
     }
   }, [isError]);
 
-  const [isOpenDialogDetail, setIsOpenDialogDetail] = useState(false);
   return (
     <div className="container">
       <div className="header-page flex justify-between !mb-4">
         <h4 className="text-2xl font-bold ledding-[100%]">Categories</h4>
         <div className="menu-header flex gap-2">
-          <ThecfhInput value="" placeholder="Search" />
-          <SearchButton />
+          <ThecfhSearchBar onSearch={handleSearch} />
           <ThecfhButton
             className="w-[100px] h-[35px] px-3 py-2 bg-[var(--color-blue-cenematic)] rounded !mb-2 text-white flex items-center justify-center"
             label="Create"
-						onClick={() => {
-							setIsOpenDialogDetail(true);
-							setSelectedData(null);
-							setMode(modeFormCateogy.CREATE);
-						}}
+            onClick={() => {
+              setIsOpenDialogDetail(true);
+              setSelectedData(null);
+              setMode(modeFormCateogy.CREATE);
+            }}
           />
         </div>
       </div>
@@ -209,8 +286,9 @@ export default function Categories() {
         isOpen={isOpenDialogDetail}
         data={selectedData}
         mode={mode}
-        onCancel={() => setIsOpenDialogDetail(false)}
-        onSubmit={(data) => console.log(data)}
+				isSubmitting={isSubmitting}
+        onCancel={handleCloseDialogDetail}
+        onSubmit={handleSubmit}
       />
     </div>
   );

@@ -20,6 +20,6 @@ export const optionAction = [
 	},
 	{
 		label: 'Delete',
-		value: ''
+		value: 'delete'
 	}
 ]
