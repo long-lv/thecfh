@@ -146,7 +146,6 @@ export class CategoriesService {
 
 	async remove(id: string) {
 		const checkExists = await this.findOne(id);
-		console.log(checkExists, 'checkExists');
 		if (!checkExists) {
 			throw new NotFoundException(
 				`${MESSAGE_UTIL.NOT_FOUND(`category id = ${id}`)}`,

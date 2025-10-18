@@ -84,9 +84,9 @@ export class ProductsService {
 			size: size.toString(),
 			sort: order,
 		});
-		const queryBuilder = this.productRepository
-			.createQueryBuilder('product')
-			.leftJoin('product.category', 'category');
+	const queryBuilder = this.productRepository
+		.createQueryBuilder('product')
+		.leftJoinAndSelect('product.category', 'category');
 
 		if (query.categoryId) {
 			queryBuilder.where('product.categoryId = :categoryId', {
@@ -107,6 +107,19 @@ export class ProductsService {
 			.take(paginationData.size);
 
 		const [data, total] = await queryBuilder.getManyAndCount();
+		const formatedData = data.map((product) => {
+			return {
+				id: product.id,
+				name: product.name,
+				description: product.description,
+				price: product.price,
+				imgUrl: product.imgUrl,
+				categoryId: product.categoryId,
+				categoryName: product.category.name,
+				createdAt: product.createdAt,
+				updatedAt: product.updatedAt,
+			}
+		})
 		return {
 			meta: {
 				total,
@@ -114,7 +127,7 @@ export class ProductsService {
 				page,
 				totalPage: Math.ceil(total / Number(size)),
 			},
-			data,
+			data: formatedData,
 		};
 	}
 
