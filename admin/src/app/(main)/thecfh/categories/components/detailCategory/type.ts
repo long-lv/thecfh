@@ -4,6 +4,7 @@ export enum modeFormCateogy{
 	VIEW= 1,
 	CREATE= 2,
 	EDIT= 3,
+	DELETE= 4,
 }
 
 export type TReqDataCategory = Omit<ICategories, 'id' | 'createdAt' | 'updatedAt'>;

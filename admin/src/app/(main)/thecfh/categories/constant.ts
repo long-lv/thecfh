@@ -1,4 +1,4 @@
-import { ICategories } from "@/src/lib/type/categories.type";
+import { modeFormCateogy } from "./components/detailCategory/type";
 
 export const columns = [
   {
@@ -16,10 +16,13 @@ export const columns = [
 export const optionAction = [
 	{
 		label: 'Edit',
-		value: 'edit'
+		value: modeFormCateogy.EDIT as unknown as string,
 	},
 	{
 		label: 'Delete',
-		value: 'delete'
+		value: modeFormCateogy.DELETE as unknown as string
 	}
 ]
+
+
+export const MESSAGE_ERROR_ACTION_DEFAULT ="Error action"
