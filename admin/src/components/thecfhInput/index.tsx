@@ -1,11 +1,12 @@
 "use client";
-import Image from "next/image";
-import styles from "./style.module.css";
-import { IPropsThecfhInput } from "./type";
 import passwordEye from "@/src/assets/images/passwordEye.svg";
 import passwordEyeClose from "@/src/assets/images/passwordEyeClose.svg";
+import Image from "next/image";
+import { memo } from "react";
+import styles from "./style.module.css";
+import { IPropsThecfhInput } from "./type";
 
-const ThecfhInput = (props: IPropsThecfhInput) => {
+const ThecfhInput = memo((props: IPropsThecfhInput) => {
   const {
     placeholder,
     value,
@@ -39,6 +40,7 @@ const ThecfhInput = (props: IPropsThecfhInput) => {
                 leading-[var(--line-height-100-percent)]
                 gap-2 flex 
 								${error ? 'border-red-500' : 'border-[var(--color-gray-border)]'}
+								${disabled ? 'bg-[var(--color-gray-border-200)] text-black' : ''}
                 ${classNameInput || ""}
               `}
           style={{
@@ -70,6 +72,8 @@ const ThecfhInput = (props: IPropsThecfhInput) => {
       )}
     </div>
   );
-};
+});
+
+ThecfhInput.displayName = "ThecfhInput";
 
 export default ThecfhInput;

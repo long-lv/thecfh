@@ -1,12 +1,11 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 export interface IPropsThecfhDialog {
   width?: string;
   open: boolean;
-  onClose: () => void;
   title?: string;
   children: ReactNode;
-  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false;
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
   fullWidth?: boolean;
   fullScreen?: boolean;
   disableBackdropClick?: boolean;
@@ -17,7 +16,10 @@ export interface IPropsThecfhDialog {
   closeButtonText?: string;
   confirmButton?: boolean;
   confirmButtonText?: string;
-  onConfirm?: () => void;
+  isHiddenBorderTop?: boolean;
+  isHiddenBorderBot?: boolean;
   loading?: boolean;
   footer?: ReactNode;
+  onConfirm?: () => void;
+  onClose: () => void;
 }

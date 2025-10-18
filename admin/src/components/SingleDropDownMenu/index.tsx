@@ -1,6 +1,6 @@
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ISingleDropDownProps } from "./type";
 import dropDownIcon from "@/src/assets/images/dropdownicon.svg";
 import checkedIcon from "@/src/assets/images/checkedIcon.svg";
@@ -43,9 +43,7 @@ export default function SingleDropDownMenu(props: ISingleDropDownProps) {
       })?.label || ""
     );
   };
-  useEffect(() => {
-    getLabelByValue();
-  }, [selectedValue]);
+
   return (
     <div>
       {isMoreIcon ? (
@@ -109,7 +107,7 @@ export default function SingleDropDownMenu(props: ISingleDropDownProps) {
               } px-3 py-2 !flex !justify-between hover:!bg-[var(--color-blue-cenematic-200)]`}
               style={{
                 backgroundColor:
-                  selectedValue === option.value
+                  (!isMoreIcon && selectedValue === option.value)
                     ? "var(--color-blue-cenematic-200)"
                     : "",
               }}
@@ -118,14 +116,14 @@ export default function SingleDropDownMenu(props: ISingleDropDownProps) {
                 className="text-sm font-normal ledding-[140%] hover:!text-[var(--color-blue-cenematic)]"
                 style={{
                   color:
-                    selectedValue === option.value
+                    (!isMoreIcon && selectedValue === option.value)
                       ? "var(--color-blue-cenematic)"
                       : "var(--color-black-1)",
                 }}
               >
                 {option.label}
               </span>
-              {selectedValue === option.value ? (
+              {(!isMoreIcon && selectedValue === option.value) ? (
                 <Image
                   src={checkedIcon}
                   width={16}

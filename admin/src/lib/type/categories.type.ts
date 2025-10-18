@@ -8,8 +8,8 @@ export interface ICategoriesResponse {
 
 export interface ICategories {
 	id: number;
-	createdAt: string;
-	updatedAt: string;
+	createdAt?: string;
+	updatedAt?: string;
 	name: string;
 	description: string;
 }
