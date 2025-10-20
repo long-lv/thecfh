@@ -18,6 +18,7 @@ import { useGlobalToast } from "@/src/hooks/useGlobalToast";
 import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
 import ThecfhPaginator from "@/src/components/thecfhPaginator";
 import Image from "next/image";
+import TheCfhPhotoView from "@/src/components/ThecfhPhotoView";
 
 export default function ProductsPage() {
   const { data, isError, isPending, isFetching, updateQuery } =
@@ -46,7 +47,7 @@ export default function ProductsPage() {
       if (col.id === "name") {
         return {
           ...col,
-          format: (_: unknown, row: IProduct) => (
+          format: (_: unknown, row?: IProduct) => (
             <div className="cursor-pointer hover:text-[var(--color-blue-cenematic)]">
               {row?.name}
             </div>
@@ -57,8 +58,8 @@ export default function ProductsPage() {
       if (col.id === "price") {
         return {
           ...col,
-          format: (_: unknown, row: IProduct) => (
-            <span>{formatedPrice(row.price)}</span>
+          format: (_: unknown, row?: IProduct) => (
+            <span>{row && row.price ? formatedPrice(row.price) : ""}</span>
           ),
         };
       }
@@ -66,13 +67,13 @@ export default function ProductsPage() {
       if (col.id === "imgUrl") {
         return {
           ...col,
-          format: (_: unknown, row: IProduct) => (
-            <Image
-              src={`${splitImages(row.imgUrl)[0]}`}
+          format: (_: unknown, row?: IProduct) => (
+            <TheCfhPhotoView
+              src={`${row && row.imgUrl?.length > 0 ? splitImages(row.imgUrl)[0] : ""}`}
               width={100}
               height={100}
               alt="product-img"
-            ></Image>
+            />
           ),
         };
       }
@@ -80,8 +81,8 @@ export default function ProductsPage() {
 			if (col.id === 'createdAt') {
 				return {
 					...col,
-					format: (_:unknown, row: IProduct) => (
-						<div>{formatedDate(row?.createdAt)}</div>
+					format: (_:unknown, row?: IProduct) => (
+						<div>{row?.createdAt ? formatedDate(row?.createdAt) : ""}</div>
 					)
 				}
 			}

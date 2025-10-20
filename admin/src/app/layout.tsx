@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LoadingProvider } from "../contexts/LoadingContext";
 import { ToastProvider } from "../contexts/ToastContext";
 import ReactQueryProvider from "../providers/ReactQueryProvider";
+import "react-photo-view/dist/react-photo-view.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
