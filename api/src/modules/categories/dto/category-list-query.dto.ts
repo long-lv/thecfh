@@ -9,4 +9,7 @@ export class CategoryListQueryDto extends PaginationQueryDto {
 	// Oder by eg: createdAt-DESC
 	@IsOptional()
 	order: string;
+
+	@IsOptional()
+	isGetAll: boolean;
 }
