@@ -1,6 +1,6 @@
 export interface IDropDown {
   label: string;
-  value: string;
+  value: string | number;
 }
 
 export enum Role {
