@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "local-dev": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next dev",
+    "local-build": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next build",
+    "local-start": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next start"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -20,6 +23,7 @@
     "@reduxjs/toolkit": "^2.9.0",
     "@tanstack/react-query": "^5.90.2",
     "@tanstack/react-query-devtools": "^5.90.2",
+    "@tinymce/tinymce-react": "^6.3.0",
     "axios": "^1.12.2",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.18",
@@ -29,7 +33,9 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.64.0",
+    "react-photo-view": "^1.2.7",
     "react-redux": "^9.2.0",
+    "tinymce": "^8.1.2",
     "yup": "^1.7.1",
     "zustand": "^5.0.8"
   },

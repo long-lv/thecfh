@@ -1,13 +1,18 @@
 "use client";
 
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useGlobalLoading } from "./useGlobalLoading";
 export const useRouterUtil = () => {
   // [Hook] Use Route
   const router = useRouter();
   // [Hook] Use loading
   const loading = useGlobalLoading();
-    // [Hook] Get param URL
+  // [Hook] Get param URL
   const params = useParams();
   // [Hook] Get pathname URL
   const pathName = usePathname();
@@ -19,19 +24,27 @@ export const useRouterUtil = () => {
 
   // [Var] Transform query to string
   const queryString =
-    '?' +
+    "?" +
     Array.from(searchParams.entries())
       .map(([key, value]) => `${key}=${value}`)
-      .join('&');
+      .join("&");
+
+  const ROUTER_PREFIX = "/thecfh";
+  const buildPath = (path: string) => {
+    // If the path already starts with the prefix, keep it as is
+    if (path.startsWith(ROUTER_PREFIX)) return path;
+    // If the path starts with '/', concatenate cleanly with the prefix
+    return `${ROUTER_PREFIX}${path.startsWith("/") ? "" : "/"}${path}`;
+  };
 
   const push = (path: string) => {
     loading.showLoading();
-    router.push(path);
+    router.push(buildPath(path));
   };
 
   const replace = (path: string) => {
     loading.showLoading();
-    router.push(path);
+    router.push(buildPath(path));
   };
 
   const back = () => {

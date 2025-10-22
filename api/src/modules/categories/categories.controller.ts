@@ -58,11 +58,12 @@ export class CategoriesController {
 		],
 	})
 	findAll(@Query() query: CategoryListQueryDto) {
-		const { keyword, order, page, size } = query;
+		const { keyword, order, page, size, isGetAll } = query;
 		return this.categoriesService.findAll({
 			keyword,
 			order,
 			page,
+			isGetAll,
 			limit: size,
 		});
 	}

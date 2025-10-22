@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/node-v22.21.0
 /.pnp
 .pnp.*
 .yarn/*

@@ -1,6 +1,5 @@
 "use client";
 
-import SingleDropDownMenu from "@/src/components/singleDropDownMenu";
 import ThecfhButton from "@/src/components/thecfhButton";
 import ThecfhPaginator from "@/src/components/thecfhPaginator";
 import ThecfhSearchBar from "@/src/components/thecfhSearchBar";
@@ -34,6 +33,7 @@ import {
   optionAction,
 } from "./constant";
 import DialogConfirmAction from "@/src/components/confirmAction";
+import ThecfhSingleDropDownMenu from "@/src/components/singleDropDownMenu";
 
 /**
  * Categories Page Component
@@ -293,7 +293,7 @@ export default function Categories() {
   const renderAction = (id: number) => {
     return (
       <div className="flex gap-1">
-        <SingleDropDownMenu
+        <ThecfhSingleDropDownMenu
           isMoreIcon={true}
           options={optionAction}
           onChangeValue={(val) => {

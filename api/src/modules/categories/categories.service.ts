@@ -43,6 +43,7 @@ export class CategoriesService {
 		limit,
 		keyword,
 		order = 'createdAt-DESC',
+		isGetAll= false
 	}: IFindAllParams) {
 		const { size, skip, sortKey, sortValue } = GenerateDataUtil.paginationFields({
 			page,
@@ -66,10 +67,26 @@ export class CategoriesService {
 			});
 		}
 
-		query.orderBy(`categories.${sortKey}`, sortValue).skip(skip).take(size);
+		if (isGetAll) {
+			console.log('getAll');
+			query.orderBy(`categories.${sortKey}`, sortValue)
+		} else {
+			query.orderBy(`categories.${sortKey}`, sortValue).skip(skip).take(size);
+		}
 
 		const [data, total] = await query.getManyAndCount();
 
+		if (isGetAll) {
+			return {
+			  meta: {
+				total,
+				size: total,    
+				page: 1,        
+				totalPage: 1,    
+			  },
+			  data,
+			};
+		  }
 		return {
 			meta: {
 				total,
@@ -146,7 +163,6 @@ export class CategoriesService {
 
 	async remove(id: string) {
 		const checkExists = await this.findOne(id);
-		console.log(checkExists, 'checkExists');
 		if (!checkExists) {
 			throw new NotFoundException(
 				`${MESSAGE_UTIL.NOT_FOUND(`category id = ${id}`)}`,

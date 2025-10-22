@@ -6,7 +6,7 @@ import dropDownIcon from "@/src/assets/images/dropdownicon.svg";
 import checkedIcon from "@/src/assets/images/checkedIcon.svg";
 import Image from "next/image";
 const defaultValue = "Select option";
-export default function SingleDropDownMenu(props: ISingleDropDownProps) {
+export default function ThecfhSingleDropDownMenu(props: ISingleDropDownProps) {
   const {
     isMoreIcon = false,
     width,

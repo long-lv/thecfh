@@ -11,5 +11,6 @@ export interface IPropsThecfhSelect {
     style?: React.CSSProperties;
     disabled?: boolean;
     size?: "small" | "medium";
+		error?: string;
     onChange?: (value: string) => void;
 }

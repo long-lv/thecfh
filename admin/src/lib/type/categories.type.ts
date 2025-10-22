@@ -2,7 +2,7 @@ import { IPaginatorResponse } from "./api.type";
 
 export interface ICategoriesResponse {
 	data: ICategories[];
-	meta: IPaginatorResponse;
+	meta?: IPaginatorResponse;
 	statusCode: number;
 }
 
@@ -19,6 +19,7 @@ export interface ICategoriesGetQuery {
 	order: string;
 	page: number;
 	size: number;
+	isGetAll?: boolean;
 }
 
 export interface ICategoryRequest { 

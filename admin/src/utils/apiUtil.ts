@@ -57,9 +57,7 @@ const refreshToken = async () => {
         {}, // Body empty
         { withCredentials: true }
       );
-
-      const { access_token } = refreshToken.data.data;
-			console.log(refreshToken, 'refreshTokenrefreshTokenrefreshTokenrefreshTokenrefreshTokenrefreshToken');
+      const { access_token } = refreshToken.data.data.data;
 
       setAccessToken(access_token);
       resolve(access_token);
