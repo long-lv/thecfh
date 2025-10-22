@@ -11,7 +11,8 @@
     "build-storybook": "storybook build",
     "local-dev": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next dev",
     "local-build": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next build",
-    "local-start": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next start"
+    "local-start": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next start",
+    "local-npm": "E:\\code\\thecfh\\admin\\node-v22.21.0\\node-v22.21.0-win-x64\\npm.cmd"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -32,6 +33,7 @@
     "postcss": "^8.5.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.64.0",
     "react-photo-view": "^1.2.7",
     "react-redux": "^9.2.0",

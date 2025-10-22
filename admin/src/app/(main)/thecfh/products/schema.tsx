@@ -23,7 +23,9 @@ export const productSchema = yup.object().shape({
 	categoryId: yup
 	.number()
 	.required('price is not required')
-	.min(0, 'category id is less than 0')
+	.min(0, 'category id is less than 0'),
+
+	images: yup.array().of(yup.mixed<File>()).default([]),
 })
 
 export type TYProductSchema = yup.InferType<typeof productSchema>;

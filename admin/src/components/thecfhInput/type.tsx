@@ -1,6 +1,6 @@
 export interface IPropsThecfhInput {
     placeholder?: string;
-    value?: string;
+    value?: string | number;
     type?: 'text' | 'number' | 'password';
     className?: string;
     classNameInput?: string;

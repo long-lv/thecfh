@@ -1,6 +1,6 @@
 'use client'
 import { useGetCategories } from "@/src/hooks/useCategories";
-import FormProduct from "../components/productForm";
+import FormProduct from "../components/productForm/productForm";
 import { defaulQueryGetCategories, defaultData } from "../constaint";
 import { modeFormProduct } from "../type";
 import { useEffect, useState } from "react";

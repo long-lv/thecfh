@@ -6,13 +6,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { defaultData } from "../constaint";
-import { productSchema, TYProductSchema } from "../schema";
-import IPropsProductForm from "./type";
+import { defaultData } from "../../constaint";
+import { productSchema, TYProductSchema } from "../../schema";
+import IPropsProductForm from "../type";
 import ThecfhSelect from "@/src/components/thecfhSelect";
 import ThecfhLabel from "@/src/components/thecfhLabel";
+import DropFile from "../dropFile/dropFile";
+import ThecfhButton from "@/src/components/thecfhButton";
 
-const TinyEditor = dynamic(() => import("../../../../../components/tiniMceEditor"), {
+const TinyEditor = dynamic(() => import("../../../../../../components/tiniMceEditor"), {
   ssr: false,
 });
 
@@ -29,6 +31,10 @@ export default function FormProduct(props: IPropsProductForm) {
     mode: "onChange",
     defaultValues: defaultData,
   });
+
+	const onSubmitCreate = (data:TYProductSchema) => {
+		console.log(data, 'data')
+	}
 
   useEffect(() => {
     console.log(categoriesList, "categoriesList");
@@ -80,9 +86,38 @@ export default function FormProduct(props: IPropsProductForm) {
 					name="categoryId"
 					control={control}
 					render={({ field, fieldState}) => (
-						<ThecfhSelect value={String(field.value)} error={fieldState?.error?.message} options={categoriesList}></ThecfhSelect>
+						<ThecfhSelect value={String(field.value)} error={fieldState?.error?.message} options={categoriesList} onChange={field.onChange}></ThecfhSelect>
 					)}
 				/>
+			</div>
+			<div className="form-wrap !mb-2">
+        <ThecfhLabel label="Price" required={true} />
+        <Controller
+          name="price"
+          control={control}
+          render={({ field, fieldState }) => (
+            <ThecfhInput
+              value={field.value || ""}
+							type="number"
+              placeholder="price..."
+              width="100%"
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+      </div>
+			<div className="form-wrap !mb-2">
+				<ThecfhLabel label="Images"/>
+				<Controller
+					name="images"
+					control={control}
+					render={({ field, fieldState}) => (
+						<DropFile onChange={field.onChange}></DropFile>
+					)}
+				/>
+			</div>
+			<div className="flex justify-end">
+				<ThecfhButton label="Submit" onClick={handleSubmit(onSubmitCreate)}></ThecfhButton>
 			</div>
     </div>
   );
