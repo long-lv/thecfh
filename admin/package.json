@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "local-dev": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next dev",
+    "local-build": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next build",
+    "local-start": "\"E:\\\\code\\\\thecfh\\\\admin\\\\node-v22.21.0\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\next\\\\dist\\\\bin\\\\next start"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

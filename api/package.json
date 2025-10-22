@@ -24,7 +24,9 @@
 		"mg": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d ./src/data-source.ts",
 		"mr": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.ts",
 		"mv": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/data-source.ts",
-		"seed": "ts-node -r tsconfig-paths/register src/seeder/seeder.ts"
+		"seed": "ts-node -r tsconfig-paths/register src/seeder/seeder.ts",
+		"local-start:dev": "\"E:\\\\code\\\\thecfh\\\\api\\\\node-v22.21.0-win-x64\\\\node-v22.21.0-win-x64\\\\node.exe\" node_modules\\\\@nestjs\\\\cli\\\\bin\\\\nest.js start --watch",
+		"local-start:prod": "\"E:\\\\code\\\\thecfh\\\\api\\\\node-v22.21.0-win-x64\\\\node-v22.21.0-win-x64\\\\node.exe\" dist\\\\main.js"
 	},
 	"dependencies": {
 		"@faker-js/faker": "^8.0.0",
