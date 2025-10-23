@@ -18,15 +18,15 @@ export default function TheCfhPhotoView(props: IPropsThecfhPhoView) {
     photos = [],
   } = props;
 
-
-	const [errorImages, setErrorImages] = useState<Record<string, boolean>>({});
+  const [errorImages, setErrorImages] = useState<Record<string, boolean>>({});
 
   const handleError = (url: string) => {
     setErrorImages((prev) => ({ ...prev, [url]: true }));
   };
 
   const renderImage = (imgSrc: string, key?: number) => {
-    const displaySrc = errorImages[imgSrc] ? defaulImgFail.src : imgSrc;
+    const safeSrc = imgSrc && imgSrc !== "" ? imgSrc : defaulImgFail.src;
+    const displaySrc = errorImages[safeSrc] ? defaulImgFail.src : safeSrc;
 
     return (
       <PhotoView key={key} src={displaySrc}>
@@ -40,7 +40,9 @@ export default function TheCfhPhotoView(props: IPropsThecfhPhoView) {
             transition: "0.3s",
           }}
           alt={alt}
-          className={`cursor-pointer rounded-lg hover:opacity-90 ${className || ""}`}
+          className={`cursor-pointer rounded-lg hover:opacity-90 ${
+            className || ""
+          }`}
           width={width}
           height={height}
         />

@@ -1,11 +1,13 @@
 import { useDropzone } from "react-dropzone";
 import { Box, Typography } from "@mui/material";
-import { useCallback, useState } from "react";
-import Image from "next/image";
+import { useCallback, useEffect, useRef } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import TheCfhPhotoView from "@/src/components/ThecfhPhotoView";
+
 interface IPropDropFile {
   width?: string;
+  files?: File[];
+  imageUrls?: string[];
   placeholder?: string;
   placeholderIsDrop?: string;
   listImages?: {
@@ -14,30 +16,45 @@ interface IPropDropFile {
   };
   onChange?: (files: File[]) => void;
 }
+
 export default function DropFile(props: IPropDropFile) {
-  const [files, setFiles] = useState<File[]>([]);
   const {
+    files = [],
+    imageUrls = [],
     width,
     placeholder = "Drop file or click choose file upload",
     placeholderIsDrop = "Drop file here...",
     onChange,
   } = props;
 
+  const allImages = [...files, ...imageUrls];
+
+  const filesRef = useRef<File[]>(files);
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      onChange?.(acceptedFiles);
-      setFiles((prev) => [...prev, ...acceptedFiles]);
+      const newFiles = [...filesRef.current, ...acceptedFiles];
+      onChange?.(newFiles);
     },
     [onChange]
   );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
   });
 
-  const handleClickDeleteImage = (index: number) => {
-    const filteredImages = files.splice(index, 0);
-    setFiles(filteredImages);
-  };
+  const handleClickDeleteImage = useCallback(
+    (index: number) => {
+      const newFiles = filesRef.current.filter((_, i) => i !== index);
+      onChange?.(newFiles);
+    },
+    [onChange]
+  );
+
+  useEffect(() => {
+    filesRef.current = files;
+  }, [files]);
+
   return (
     <section>
       <Box
@@ -66,18 +83,20 @@ export default function DropFile(props: IPropDropFile) {
           Files:
         </Typography>
         <ul className="flex gap-4">
-          {files?.map((file, index) => (
+          {allImages?.map((image, index) => (
             <li
               key={index}
               className="relative h-24 w-24 aspect-square overflow-hidden"
             >
               <TheCfhPhotoView
-                src={URL.createObjectURL(file)}
+                src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
                 className="object-contain w-full h-full"
                 alt="images"
                 width={96}
                 height={96}
-              ></TheCfhPhotoView>
+              />
               <CloseIcon
                 className="absolute top-1 right-1 cursor-pointer"
                 sx={{

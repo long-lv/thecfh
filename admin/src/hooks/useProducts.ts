@@ -1,7 +1,9 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { IProductGetQuery, IProductsResponse } from "../lib/type/products.type";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
+import { IGetProductResponse, IProduct, IProductGetQuery, IProductRequest, IProductsResponse } from "../lib/type/products.type";
 import { productsApi } from "../lib/api/products.api";
 import { useCallback, useState } from "react";
+import { AxiosError } from "axios";
+import { ApiErrorResponse } from "../lib/type/api.type";
 
 export const PRODUCTS_QUERY_KEYS= {
 	all: ["products"] as const,
@@ -64,4 +66,32 @@ export const useProductsWithQuery = (initiaQuery: IProductGetQuery) => {
 		hasNextPage: productsQuery.data ? query.page < productsQuery.data.meta.totalPage : false,
 		hasPrevPage: query.page > 1
 	}
+}
+
+export const useGetProductById = (
+	id: number,
+	options?: UseQueryOptions<IGetProductResponse, Error>
+) => {
+	return useQuery<IGetProductResponse>({
+		queryKey: PRODUCTS_QUERY_KEYS.detail(id),
+		queryFn: () => productsApi.getProductById(id),
+		staleTime: 5* 60 * 1000,
+		...options
+	})
+}
+
+export const useCreateProduct = () => {
+	const queryClient = useQueryClient();
+	return useMutation<
+		IProduct,
+		AxiosError<ApiErrorResponse>,
+		IProductRequest | FormData
+	>({
+		mutationFn: (data: IProductRequest | FormData) => productsApi.createProduct(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: PRODUCTS_QUERY_KEYS.lists()
+			})
+		}
+	})
 }

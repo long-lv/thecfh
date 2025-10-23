@@ -15,8 +15,9 @@ export const productSchema = yup.object().shape({
 	.min(3, 'description is less than 3 character'),
 
 	price: yup
-	.number()
+	.string()
 	.required('price is not required')
+	.matches(/^\d+(\.\d+)*$/, 'Price must contain only numbers and decimal point')
 	.min(0, 'price is less than 0')
 	.max(999999999, 'price is most than to'),
 
@@ -25,7 +26,7 @@ export const productSchema = yup.object().shape({
 	.required('price is not required')
 	.min(0, 'category id is less than 0'),
 
-	images: yup.array().of(yup.mixed<File>()).default([]),
+	images: yup.array().of(yup.mixed<File | string>()).default([]),
 })
 
 export type TYProductSchema = yup.InferType<typeof productSchema>;

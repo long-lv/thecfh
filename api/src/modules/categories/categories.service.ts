@@ -68,7 +68,6 @@ export class CategoriesService {
 		}
 
 		if (isGetAll) {
-			console.log('getAll');
 			query.orderBy(`categories.${sortKey}`, sortValue)
 		} else {
 			query.orderBy(`categories.${sortKey}`, sortValue).skip(skip).take(size);

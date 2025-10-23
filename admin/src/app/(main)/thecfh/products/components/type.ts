@@ -6,6 +6,6 @@ export default interface IPropsProductForm {
 	data?: null | TYProductSchema;
 	mode: modeFormProduct;
 	categoriesList?: IDropDown[];
-	onSubmit?: () => void; 
+	onSubmit?: (data: TYProductSchema) => void; 
 	onCancel?: () => void;
 }

@@ -70,7 +70,7 @@ export const optionsAction = [
 export const defaultData = {
 	name: "",
 	description: "",
-	price: 0,
+	price: "",
 	categoryId: 0,
 	images: [],
 };

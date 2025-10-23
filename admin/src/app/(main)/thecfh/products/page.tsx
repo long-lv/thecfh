@@ -7,12 +7,10 @@ import { columns, defaulQuery, optionsAction } from "./constaint";
 import { useEffect, useState } from "react";
 import { IProduct } from "@/src/lib/type/products.type";
 import { IPaginatorResponse } from "@/src/lib/type/api.type";
+import DOMPurify from "dompurify";
 import {
-  formatedDate,
-  formatedPrice,
   PAGINATION_PAGE_DEFAULT,
   PAGINATION_SIZE_DEFAULT,
-  splitImages,
 } from "@/src/constants";
 import { useGlobalToast } from "@/src/hooks/useGlobalToast";
 import { useGlobalLoading } from "@/src/hooks/useGlobalLoading";
@@ -21,18 +19,19 @@ import TheCfhPhotoView from "@/src/components/ThecfhPhotoView";
 import ThecfhSingleDropDownMenu from "@/src/components/singleDropDownMenu";
 import { modeFormProduct } from "./type";
 import { useRouterUtil } from "@/src/hooks/useRouterWithLoading";
+import { TheCfhUtils } from "@/src/utils/thecfhUtils";
 
 export default function ProductsPage() {
   const { data, isError, isPending, isFetching, updateQuery } =
     useProductsWithQuery(defaulQuery);
-	
-	const router = useRouterUtil();
+
+  const router = useRouterUtil();
   const toast = useGlobalToast();
   const loading = useGlobalLoading();
   const [listProduct, setListProduct] = useState<IProduct[]>([]);
   const [query, setQuery] = useState(defaulQuery);
-	const [selectedItem, setSelectedItem] = useState<IProduct | null>(null);
-	const [mode, setMode] = useState<modeFormProduct | null>(null);
+  const [selectedItem, setSelectedItem] = useState<IProduct | null>(null);
+  const [mode, setMode] = useState<modeFormProduct | null>(null);
   const [paginator, setPaginator] = useState<IPaginatorResponse>({
     total: 0,
     size: PAGINATION_SIZE_DEFAULT,
@@ -48,21 +47,42 @@ export default function ProductsPage() {
     updateQuery({ size });
   };
 
+  const handleChooseAction = (val: modeFormProduct, item?: IProduct) => {
+    setMode(val);
+    if (item) {
+      setSelectedItem(item);
+    }
+  };
 
-	const handleChooseAction = (val: modeFormProduct, item?: IProduct) => {
-		setMode(val);
-		if (item) {
-			setSelectedItem(item);
-		}
-	}
-
-	 const columnsFormated = [
+  const columnsFormated = [
     ...columns.map((col) => {
       if (col.id === "price") {
         return {
           ...col,
           format: (_: unknown, row?: IProduct) => (
-            <span>{row && row.price ? formatedPrice(row.price) : ""}</span>
+            <span>
+              {row && row.price ? TheCfhUtils.formatedPrice(row.price) : ""}
+            </span>
+          ),
+        };
+      }
+
+      if (col.id === "description") {
+        return {
+          ...col,
+          format: (_: unknown, row?: IProduct) => (
+            <span>
+              {row?.description ? (
+                <div
+                  className="w-[400px] line-clamp-3 text-ellipsis overflow-hidden"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(row?.description),
+                  }}
+                ></div>
+              ) : (
+                ""
+              )}
+            </span>
           ),
         };
       }
@@ -73,7 +93,9 @@ export default function ProductsPage() {
           format: (_: unknown, row?: IProduct) => (
             <TheCfhPhotoView
               src={`${
-                row && row.imgUrl?.length > 0 ? splitImages(row.imgUrl)[0] : ""
+                row && row.imgUrl?.length > 0
+                  ? TheCfhUtils.splitImages(row.imgUrl)[0]
+                  : ""
               }`}
               width={100}
               height={100}
@@ -87,7 +109,9 @@ export default function ProductsPage() {
         return {
           ...col,
           format: (_: unknown, row?: IProduct) => (
-            <div>{row?.createdAt ? formatedDate(row?.createdAt) : ""}</div>
+            <div>
+              {row?.createdAt ? TheCfhUtils.formatedDate(row?.createdAt) : ""}
+            </div>
           ),
         };
       }
@@ -98,7 +122,9 @@ export default function ProductsPage() {
           format: (_: unknown, row?: IProduct) => (
             <ThecfhSingleDropDownMenu
               options={optionsAction}
-              onChangeValue={(val) => handleChooseAction(val as modeFormProduct, row)}
+              onChangeValue={(val) =>
+                handleChooseAction(val as modeFormProduct, row)
+              }
               isMoreIcon={true}
               width="120px"
             ></ThecfhSingleDropDownMenu>
@@ -109,19 +135,19 @@ export default function ProductsPage() {
     }),
   ];
 
-	useEffect(() => {
-		switch (mode){
-			case modeFormProduct.VIEW: 
-				router.push(`/products/${selectedItem?.id}`);
-				break;
-			case modeFormProduct.EDIT: 
-				router.push(`/products/${selectedItem?.id}/update`);
-				break;
-			case modeFormProduct.CREATE: 
-				router.push(`/products/create`);
-				break;
-		}
-	},[mode])
+  useEffect(() => {
+    switch (mode) {
+      case modeFormProduct.VIEW:
+        router.push(`/products/${selectedItem?.id}`);
+        break;
+      case modeFormProduct.EDIT:
+        router.push(`/products/${selectedItem?.id}/update`);
+        break;
+      case modeFormProduct.CREATE:
+        router.push(`/products/create`);
+        break;
+    }
+  }, [mode]);
 
   useEffect(() => {
     if (data?.data) setListProduct(data?.data);
@@ -141,7 +167,7 @@ export default function ProductsPage() {
     }
   }, [isError]);
 
-	// Layout
+  // Layout
   return (
     <div className="container">
       <div className="header flex justify-between items-center">
@@ -152,7 +178,7 @@ export default function ProductsPage() {
             className="w-[100px] h-[35px] px-3 py-2 bg-[var(--color-blue-cenematic)] rounded !mb-2 text-white flex items-center justify-center"
             label="Create"
             onClick={() => {
-              setMode(modeFormProduct.CREATE)
+              setMode(modeFormProduct.CREATE);
             }}
           />
         </div>

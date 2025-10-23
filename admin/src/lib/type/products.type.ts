@@ -6,6 +6,12 @@ export interface IProductsResponse {
 	meta: IPaginatorResponse
 }
 
+export interface IGetProductResponse {
+	statusCode: number;
+	message: string;
+	data: IProduct;
+}
+
 export interface IProduct {
 	id: number;
 	name: string;
@@ -23,7 +29,7 @@ export interface IProductRequest {
 	description: string;
 	price: string;
 	categoryId: number;
-	images: string[];
+	images?: File[];
 }
 
 export interface IProductGetQuery {
