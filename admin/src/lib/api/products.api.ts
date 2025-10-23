@@ -21,7 +21,7 @@ export const productsApi = {
 	},
 	updateProduct: (id: number, data: IProductRequest | FormData): Promise<IProduct> => {
 		if (data instanceof FormData) {
-			return ApiUtil.post(`${PATH_CONSTAINT}/create`, data, {
+			return ApiUtil.put(`${PATH_CONSTAINT}/update/${id}`, data, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
