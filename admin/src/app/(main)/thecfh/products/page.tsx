@@ -76,7 +76,7 @@ export default function ProductsPage() {
                 <div
                   className="w-[400px] line-clamp-3 text-ellipsis overflow-hidden"
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(row?.description),
+                    __html: TheCfhUtils.renderHtmlToDom(row?.description),
                   }}
                 ></div>
               ) : (

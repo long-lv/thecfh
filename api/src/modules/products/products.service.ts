@@ -175,7 +175,7 @@ export class ProductsService {
 			price: product.price,
 			imgUrl: product.imgUrl,
 			categoryId: product.categoryId,
-			category: product.category,
+			categoryName: product.category.name,
 			attributes: attributes || [],
 			createdAt: product.createdAt,
 			updatedAt: product.updatedAt,

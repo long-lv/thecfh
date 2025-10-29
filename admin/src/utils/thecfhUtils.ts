@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 export class TheCfhUtils {
   public static formatedPrice(price: string | number) {
     return price ? new Intl.NumberFormat("vi-Vn").format(Number(price)) : "-";
@@ -20,5 +21,9 @@ export class TheCfhUtils {
 
 	public static convertPriceFormatToNumber(priceFormat: string) {
 		return parseInt(priceFormat.replace(/\./g, ''));
+	}
+
+	public static renderHtmlToDom(content: string | undefined) {
+		return content ? DOMPurify.sanitize(content) : "-";
 	}
 }
