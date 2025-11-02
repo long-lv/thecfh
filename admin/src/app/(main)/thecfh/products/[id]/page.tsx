@@ -1,5 +1,6 @@
 "use client";
 
+import TheCfhDrawer from "@/src/components/thecfhDrawer";
 import TheCfhPhotoView from "@/src/components/ThecfhPhotoView";
 import { useGetProductById } from "@/src/hooks/useProducts";
 import { useRouterUtil } from "@/src/hooks/useRouterWithLoading";
@@ -11,6 +12,7 @@ export default function Detail() {
   const { params } = useRouterUtil();
   const productData = useGetProductById(Number(params?.id));
   const [product, setProduct] = useState<IProduct | null>();
+  const [isOpenDrawerInfo, setIsOpenDrawerInfo] = useState(false);
   useEffect(() => {
     if (productData.data?.data) {
       setProduct(productData.data.data);
@@ -45,10 +47,27 @@ export default function Detail() {
                 __html: TheCfhUtils.renderHtmlToDom(product?.description),
               }}
             ></span>
-						<span className="text-blue-500 hover:underline cursor-pointer">read more</span>
+            <span
+              className="text-blue-500 hover:underline cursor-pointer"
+              onClick={() => setIsOpenDrawerInfo(true)}
+            >
+              read more
+            </span>
           </div>
         </li>
       </ul>
+      <TheCfhDrawer
+        isOpen={isOpenDrawerInfo}
+        onClose={() => setIsOpenDrawerInfo(false)}
+        className="px-5 py-5"
+        width="960px"
+      >
+        <div
+          dangerouslySetInnerHTML={{
+            __html: TheCfhUtils.renderHtmlToDom(product?.description),
+          }}
+        ></div>
+      </TheCfhDrawer>
     </div>
   );
 }
