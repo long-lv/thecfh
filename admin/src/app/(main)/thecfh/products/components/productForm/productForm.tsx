@@ -1,20 +1,19 @@
 "use client";
 
+import ThecfhButton from "@/src/components/thecfhButton";
 import ThecfhInput from "@/src/components/thecfhInput";
-import TheCfhLabel from "@/src/components/thecfhLabel";
+import { default as TheCfhLabel, default as ThecfhLabel } from "@/src/components/thecfhLabel";
+import ThecfhSelect from "@/src/components/thecfhSelect";
+import { TheCfhUtils } from "@/src/utils/thecfhUtils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { defaultData } from "../../constaint";
 import { productSchema, TYProductSchema } from "../../schema";
-import IPropsProductForm from "../type";
-import ThecfhSelect from "@/src/components/thecfhSelect";
-import DropFile from "../dropFile/dropFile";
-import ThecfhButton from "@/src/components/thecfhButton";
-import { TheCfhUtils } from "@/src/utils/thecfhUtils";
 import { modeFormProduct } from "../../type";
-import { useEffect, useState } from "react";
-import ThecfhLabel from "@/src/components/thecfhLabel";
+import DropFile from "../dropFile/dropFile";
+import IPropsProductForm from "../type";
 
 const TinyEditor = dynamic(
   () => import("../../../../../../components/tiniMceEditor"),
@@ -66,6 +65,7 @@ export default function FormProduct(props: IPropsProductForm) {
       setImagesUrl(formImages);
     }
   }, [data]);
+
 
   return (
     <div className="container-form">
@@ -151,8 +151,11 @@ export default function FormProduct(props: IPropsProductForm) {
           render={({ field }) => (
             <DropFile
               onChange={(files) => {
+                const onlyFiles = files.filter((f): f is File => f instanceof File);
+                const onlyUrls = files.filter((f): f is string => typeof f === 'string');
                 field.onChange(files);
-                setSelectedFiles(files);
+                setSelectedFiles(onlyFiles);
+                setImagesUrl(onlyUrls);
               }}
 							imageUrls={imagesUrl}
               files={selectedFiles}

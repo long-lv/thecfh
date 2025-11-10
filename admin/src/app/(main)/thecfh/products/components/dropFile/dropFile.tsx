@@ -1,8 +1,8 @@
-import { useDropzone } from "react-dropzone";
+import TheCfhPhotoView from "@/src/components/ThecfhPhotoView";
+import CloseIcon from "@mui/icons-material/Close";
 import { Box, Typography } from "@mui/material";
 import { useCallback, useEffect, useRef } from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import TheCfhPhotoView from "@/src/components/ThecfhPhotoView";
+import { useDropzone } from "react-dropzone";
 
 interface IPropDropFile {
   width?: string;
@@ -14,7 +14,7 @@ interface IPropDropFile {
     name: string;
     preview: string;
   };
-  onChange?: (files: File[]) => void;
+  onChange?: (files: (File | string)[]) => void;
 }
 
 export default function DropFile(props: IPropDropFile) {
@@ -34,9 +34,10 @@ export default function DropFile(props: IPropDropFile) {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const newFiles = [...filesRef.current, ...acceptedFiles];
-      onChange?.(newFiles);
+      const allImages = [...newFiles, ...imageUrls];
+      onChange?.(allImages);
     },
-    [onChange]
+    [onChange, imageUrls]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -45,10 +46,12 @@ export default function DropFile(props: IPropDropFile) {
 
   const handleClickDeleteImage = useCallback(
     (index: number) => {
-      const newFiles = filesRef.current.filter((_, i) => i !== index);
+			const allImages = [...filesRef.current, ...imageUrls];
+      const newFiles = allImages.filter((_, i) => i !== index);
+			console.log
       onChange?.(newFiles);
     },
-    [onChange]
+    [onChange, imageUrls]
   );
 
   useEffect(() => {
