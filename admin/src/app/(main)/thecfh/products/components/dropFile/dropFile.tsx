@@ -14,7 +14,8 @@ interface IPropDropFile {
     name: string;
     preview: string;
   };
-  onChange?: (files: (File | string)[]) => void;
+  onChange?: (files: (File | string)[], filesRemove?: string[]) => void;
+
 }
 
 export default function DropFile(props: IPropDropFile) {
@@ -28,6 +29,7 @@ export default function DropFile(props: IPropDropFile) {
   } = props;
 
   const allImages = [...files, ...imageUrls];
+	const filesRemove = [] as string[];
 
   const filesRef = useRef<File[]>(files);
 
@@ -45,11 +47,13 @@ export default function DropFile(props: IPropDropFile) {
   });
 
   const handleClickDeleteImage = useCallback(
-    (index: number) => {
+    (index: number, image: string | File) => {
 			const allImages = [...filesRef.current, ...imageUrls];
       const newFiles = allImages.filter((_, i) => i !== index);
-			console.log
-      onChange?.(newFiles);
+			if (typeof image === 'string') {
+				filesRemove.push(image);
+			}
+      onChange?.(newFiles, filesRemove);
     },
     [onChange, imageUrls]
   );
@@ -106,7 +110,7 @@ export default function DropFile(props: IPropDropFile) {
                   width: "16px",
                   height: "16px",
                 }}
-                onClick={() => handleClickDeleteImage(index)}
+                onClick={() => handleClickDeleteImage(index, image)}
               />
             </li>
           ))}

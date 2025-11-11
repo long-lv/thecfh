@@ -30,6 +30,7 @@ export interface IProductRequest {
 	price: string;
 	categoryId: number;
 	images?: File[];
+	fileRemove?: string[] | null;
 }
 
 export interface IProductGetQuery {

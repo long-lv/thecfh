@@ -95,3 +95,20 @@ export const useCreateProduct = () => {
 		}
 	})
 }
+
+export const useUpdateProduct = () => {
+	const queryClient = useQueryClient();
+	return useMutation<
+	IProduct,
+		AxiosError<ApiErrorResponse>,
+		{id: number, data: IProductRequest | FormData}
+	>({
+	mutationFn: ({id, data}: {id: number; data: IProductRequest | FormData}) => productsApi.updateProduct(id, data),
+		onSuccess: (updateProduct, variables) => {
+			queryClient.invalidateQueries({
+				queryKey: PRODUCTS_QUERY_KEYS.lists(),
+			});
+			queryClient.setQueryData(PRODUCTS_QUERY_KEYS.detail(variables.id), updateProduct)
+		}
+	})
+}

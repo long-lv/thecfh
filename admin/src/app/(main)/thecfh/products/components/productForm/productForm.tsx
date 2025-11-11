@@ -39,11 +39,13 @@ export default function FormProduct(props: IPropsProductForm) {
   });
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+	const [filesRemove, setFilesRemove] = useState<string[]>([]);
 
   const [imagesUrl, setImagesUrl] = useState<string[]>([]);
 
   const onHandleClickSubmit = (dataFrom: TYProductSchema) => {
-    onSubmit?.(dataFrom);
+		const dataSubmitForm = {...dataFrom, filesRemove}
+    onSubmit?.(dataSubmitForm);
     if (mode === modeFormProduct.CREATE) {
       reset(defaultData);
       clearErrors();
@@ -150,12 +152,13 @@ export default function FormProduct(props: IPropsProductForm) {
           control={control}
           render={({ field }) => (
             <DropFile
-              onChange={(files) => {
+              onChange={(files, imgDelete) => {
                 const onlyFiles = files.filter((f): f is File => f instanceof File);
                 const onlyUrls = files.filter((f): f is string => typeof f === 'string');
                 field.onChange(files);
                 setSelectedFiles(onlyFiles);
                 setImagesUrl(onlyUrls);
+								setFilesRemove(imgDelete || [])
               }}
 							imageUrls={imagesUrl}
               files={selectedFiles}

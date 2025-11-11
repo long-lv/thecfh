@@ -27,6 +27,7 @@ export const productSchema = yup.object().shape({
 	.min(0, 'category id is less than 0'),
 
 	images: yup.array().of(yup.mixed<File | string>()).default([]),
+	filesRemove: yup.array().of(yup.string()).notRequired().default([]),
 })
 
 export type TYProductSchema = yup.InferType<typeof productSchema>;

@@ -192,6 +192,7 @@ export class ProductsService {
 		updateProductDto: UpdateProductDto,
 		files?: Express.Multer.File[],
 	) {
+		console.log(files, 'filesfilesfiles');
 		const [productExists, categoryExists] = await Promise.all([
 			this.productRepository.findOne({
 				where: { id },
